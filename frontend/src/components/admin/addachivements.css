@@ -1,0 +1,45 @@
+.addachievement-container {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background: #f4f4f9;
+  
+}
+
+.addachievement-form {
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.15);
+  padding: 40px 30px;
+  max-width: 600px;
+  width: 100%;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.addachievement-form input,
+.addachievement-form textarea {
+  border-radius: 6px;
+  border: 1px solid #ced4da;
+  padding: 10px;
+  margin-bottom: 10px;
+}
+
+.addachievement-form button {
+  border-radius: 6px;
+  padding: 10px 20px;
+  background: #053c77;
+  color: #fff;
+  border: none;
+  margin-top: 10px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.addachievement-form button:hover {
+  background: #021f40;
+}
