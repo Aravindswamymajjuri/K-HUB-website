@@ -1,32 +1,41 @@
 const nodemailer = require('nodemailer');
 
-const predefinedEmail = 'aravindswamymajjuri143@gmail.com';
-const predefinedPassword = 'aravindswamymajjuri143@gmail.com';
-let generatedOtp = '';
+// Admin credentials: email => password
+const adminCredentials = {
+  'aravindswamymajjuri143@gmail.com': 'aravindswamymajjuri143@gmail.com',
+  'kadaripavani1@gmail.com': 'kadaripavani1@gmail.com'
+};
+
+let generatedOtps = {}; // Stores OTP per admin email
 
 // Configure Nodemailer
 const transporter = nodemailer.createTransport({
   service: 'gmail',
   auth: {
-    user: 'aravindswamymajjuri143@gmail.com',
+    user: 'aravindswamymajjuri143@gmail.com', // SMTP sender
     pass: 'zpyceoncvjjojvht',
-  },    
+  },
 });
 
-// Generate OTP
+// Generate 6-digit OTP
 const generateOtp = () => {
   return Math.floor(100000 + Math.random() * 900000).toString();
 };
 
+// Admin Login Endpoint
 const loginAdmin = (req, res) => {
   const { email, password } = req.body;
-  if (email === predefinedEmail && password === predefinedPassword) {
-    generatedOtp = generateOtp();
+
+  // Check if email exists and password matches
+  if (adminCredentials[email] && adminCredentials[email] === password) {
+    const otp = generateOtp();
+    generatedOtps[email] = otp; // Store OTP per email
+
     const mailOptions = {
       from: 'pavankolli7532@gmail.com',
       to: email,
       subject: 'Your OTP Code',
-      text: `Your OTP code is ${generatedOtp}`,
+      text: `Your OTP code is ${otp}`,
     };
 
     transporter.sendMail(mailOptions, (error, info) => {
@@ -41,10 +50,16 @@ const loginAdmin = (req, res) => {
   }
 };
 
+// OTP Verification Endpoint
 const verifyOtp = (req, res) => {
   const { email, otp } = req.body;
-  console.log('Received OTP verification attempt:', { email, otp });
-  if (email === predefinedEmail && otp === generatedOtp) {
+
+  if (
+    adminCredentials[email] &&
+    generatedOtps[email] &&
+    generatedOtps[email] === otp
+  ) {
+    delete generatedOtps[email]; // Clear OTP after use
     return res.status(200).send({ success: true });
   } else {
     return res.status(401).send('Invalid OTP');
