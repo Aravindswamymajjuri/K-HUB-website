@@ -25,7 +25,8 @@ const ProjectBatchApp = () => {
     deploymentLink: '',
     githubLink: '',
     projectImage: null,
-    document: null
+    document: null,
+    video: null
   });
 
   // Show confirmation dialog
@@ -99,6 +100,9 @@ const ProjectBatchApp = () => {
     formData.append('githubLink', teamForm.githubLink);
     formData.append('projectImage', teamForm.projectImage);
     formData.append('document', teamForm.document);
+    if (teamForm.video) {
+      formData.append('video', teamForm.video);
+    }
 
     try {
       const response = await fetch(`${API_BASE_URL}/batches/${selectedBatch.batchNumber}/teams`, {
@@ -134,6 +138,7 @@ const ProjectBatchApp = () => {
     if (teamForm.githubLink) formData.append('githubLink', teamForm.githubLink);
     if (teamForm.projectImage) formData.append('projectImage', teamForm.projectImage);
     if (teamForm.document) formData.append('document', teamForm.document);
+    if (teamForm.video) formData.append('video', teamForm.video);
 
     try {
       const response = await fetch(`${API_BASE_URL}/batches/${selectedBatch.batchNumber}/teams/${editingTeam.teamNumber}`, {
@@ -232,7 +237,8 @@ const ProjectBatchApp = () => {
       deploymentLink: '',
       githubLink: '',
       projectImage: null,
-      document: null
+      document: null,
+      video: null
     });
   };
 
@@ -254,7 +260,8 @@ const ProjectBatchApp = () => {
       deploymentLink: team.deploymentLink,
       githubLink: team.githubLink,
       projectImage: null,
-      document: null
+      document: null,
+      video: null
     });
   };
 
@@ -379,6 +386,20 @@ const ProjectBatchApp = () => {
                             >
                               <Download size={16} /> Download Document
                             </a>
+                            {/* Show video if exists */}
+                            {team.video && (
+                              <div style={{marginTop: '1rem'}}>
+                                <video
+                                  width="320"
+                                  height="180"
+                                  controls
+                                  style={{borderRadius: 8, background: '#000'}}
+                                >
+                                  <source src={`${API_BASE_URL}/batches/${selectedBatch.batchNumber}/teams/${team.teamNumber}/video`} type={team.video.contentType || 'video/mp4'} />
+                                  Your browser does not support the video tag.
+                                </video>
+                              </div>
+                            )}
                           </div>
                         </div>
                         <div className="team-actions">
@@ -526,7 +547,7 @@ const ProjectBatchApp = () => {
                     className="file-input"
                   />
                 </div>
-                
+
                 <div className="file-input-container">
                   <label className="file-label">
                     Document {!editingTeam && '*'}
@@ -534,6 +555,18 @@ const ProjectBatchApp = () => {
                   <input
                     type="file"
                     onChange={(e) => handleFileChange(e, 'document')}
+                    className="file-input"
+                  />
+                </div>
+
+                <div className="file-input-container">
+                  <label className="file-label">
+                    Video (optional)
+                  </label>
+                  <input
+                    type="file"
+                    accept="video/*"
+                    onChange={(e) => handleFileChange(e, 'video')}
                     className="file-input"
                   />
                 </div>

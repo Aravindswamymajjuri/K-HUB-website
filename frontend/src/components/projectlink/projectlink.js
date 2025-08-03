@@ -201,6 +201,20 @@ const ProjectShowcase = () => {
                     e.target.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNTAwIiBoZWlnaHQ9IjMwMCIgdmlld0JveD0iMCAwIDUwMCAzMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSI1MDAiIGhlaWdodD0iMzAwIiBmaWxsPSIjRjNGNEY2Ii8+CjxwYXRoIGQ9Ik0yMDAgMTAwSDMwMFYyMDBIMjAwVjEwMFoiIHN0cm9rZT0iIzlDQTNBRiIgc3Ryb2tlLXdpZHRoPSIzIiBmaWxsPSJub25lIi8+CjxjaXJjbGUgY3g9IjIzMCIgY3k9IjEzMCIgcj0iOCIgZmlsbD0iIzlDQTNBRiIvPgo8cGF0aCBkPSJtMjEwIDE4MCAyMC0yMCAyMCAyMC00MCA0IiBmaWxsPSIjOUNBM0FGIi8+Cjx0ZXh0IHg9IjI1MCIgeT0iMjQwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmaWxsPSIjOUNBM0FGIiBmb250LXNpemU9IjE4Ij5Qcm9qZWN0IEltYWdlPC90ZXh0Pgo8L3N2Zz4=';
                   }}
                 />
+                {/* Show video if exists */}
+                {selectedProject.video && (
+                  <div style={{marginTop: '1rem'}}>
+                    <video
+                      width="400"
+                      height="225"
+                      controls
+                      style={{borderRadius: 8, background: '#000'}}
+                    >
+                      <source src={`${API_BASE_URL}/batches/${selectedProject.batchNumber}/teams/${selectedProject.teamNumber}/video`} type={selectedProject.video.contentType || 'video/mp4'} />
+                      Your browser does not support the video tag.
+                    </video>
+                  </div>
+                )}
               </div>
             </div>
             <div className="details-content-section">

@@ -33,6 +33,20 @@ const projectSchema = new mongoose.Schema({
       required: true
     }
   },
+  video: {
+    data: {
+      type: Buffer,
+      required: false
+    },
+    contentType: {
+      type: String,
+      required: false
+    },
+    filename: {
+      type: String,
+      required: false
+    }
+  },
   title: {
     type: String,
     required: true,

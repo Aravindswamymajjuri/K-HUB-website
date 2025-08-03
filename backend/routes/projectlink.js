@@ -52,7 +52,8 @@ router.post('/batches', async (req, res) => {
 router.post('/batches/:batchNumber/teams', 
   upload.fields([
     { name: 'projectImage', maxCount: 1 },
-    { name: 'document', maxCount: 1 }
+    { name: 'document', maxCount: 1 },
+    { name: 'video', maxCount: 1 }
   ]), 
   async (req, res) => {
     try {
@@ -103,6 +104,14 @@ router.post('/batches/:batchNumber/teams',
         deploymentLink,
         githubLink
       };
+      // Add video if provided
+      if (req.files?.video && req.files.video[0]) {
+        newTeam.video = {
+          data: req.files.video[0].buffer,
+          contentType: req.files.video[0].mimetype,
+          filename: req.files.video[0].originalname
+        };
+      }
       
       // Add team to batch
       batch.teams.push(newTeam);
@@ -311,7 +320,8 @@ router.put('/batches/:batchNumber', async (req, res) => {
 router.put('/batches/:batchNumber/teams/:teamNumber', 
   upload.fields([
     { name: 'projectImage', maxCount: 1 },
-    { name: 'document', maxCount: 1 }
+    { name: 'document', maxCount: 1 },
+    { name: 'video', maxCount: 1 }
   ]), 
   async (req, res) => {
     try {
@@ -354,6 +364,14 @@ router.put('/batches/:batchNumber/teams/:teamNumber',
           data: req.files.document[0].buffer,
           contentType: req.files.document[0].mimetype,
           filename: req.files.document[0].originalname
+        };
+      }
+      // Update video if provided
+      if (req.files?.video) {
+        batch.teams[teamIndex].video = {
+          data: req.files.video[0].buffer,
+          contentType: req.files.video[0].mimetype,
+          filename: req.files.video[0].originalname
         };
       }
       
@@ -436,6 +454,63 @@ router.delete('/batches/:batchNumber/teams/:teamNumber', async (req, res) => {
     res.status(500).json({
       success: false,
       message: 'Error deleting team',
+      error: error.message
+    });
+  }
+});
+
+// 8. Get project video (with range support)
+router.get('/batches/:batchNumber/teams/:teamNumber/video', async (req, res) => {
+  try {
+    const { batchNumber, teamNumber } = req.params;
+    const batch = await ProjectBatch.findOne({ batchNumber: parseInt(batchNumber) });
+    if (!batch) {
+      return res.status(404).json({ success: false, message: 'Batch not found' });
+    }
+    const team = batch.teams.find(t => t.teamNumber === parseInt(teamNumber));
+    if (!team || !team.video || !team.video.data) {
+      return res.status(404).json({ success: false, message: 'Video not found' });
+    }
+    // Ensure videoBuffer is a Node.js Buffer (handles MongoDB Binary type)
+    let videoBuffer = team.video.data;
+    if (videoBuffer && typeof videoBuffer === 'object' && videoBuffer._bsontype === 'Binary' && videoBuffer.buffer) {
+      videoBuffer = Buffer.from(videoBuffer.buffer);
+    } else if (!(videoBuffer instanceof Buffer)) {
+      videoBuffer = Buffer.from(videoBuffer);
+    }
+    const videoLength = videoBuffer.length;
+    const range = req.headers.range;
+    const contentType = team.video.contentType || 'video/mp4';
+    if (range) {
+      // Parse Range header, e.g. 'bytes=0-'
+      const parts = range.replace(/bytes=/, '').split('-');
+      const start = parseInt(parts[0], 10);
+      const end = parts[1] ? parseInt(parts[1], 10) : videoLength - 1;
+      if (start >= videoLength || end >= videoLength) {
+        res.status(416).send('Requested range not satisfiable');
+        return;
+      }
+      const chunkSize = (end - start) + 1;
+      res.writeHead(206, {
+        'Content-Range': `bytes ${start}-${end}/${videoLength}`,
+        'Accept-Ranges': 'bytes',
+        'Content-Length': chunkSize,
+        'Content-Type': contentType,
+        'Content-Disposition': `inline; filename="${team.video.filename || 'video.mp4'}"`
+      });
+      res.end(videoBuffer.slice(start, end + 1));
+    } else {
+      res.writeHead(200, {
+        'Content-Length': videoLength,
+        'Content-Type': contentType,
+        'Content-Disposition': `inline; filename="${team.video.filename || 'video.mp4'}"`
+      });
+      res.end(videoBuffer);
+    }
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: 'Error retrieving video',
       error: error.message
     });
   }
