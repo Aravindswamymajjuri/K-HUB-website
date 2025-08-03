@@ -1,6 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import './manageproject.css';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
+const validateUrl = url => /^https?:\/\/.+/.test(url);
 
 const ManageProjects = () => {
   const [batchNumbers, setBatchNumbers] = useState([]);
@@ -58,6 +62,14 @@ const ManageProjects = () => {
   };
 
   const handleSave = (project) => {
+    if (!project.name || !project.description || !project.githubLink || !project.developer) {
+      toast.error('All fields are required!');
+      return;
+    }
+    if (!validateUrl(project.githubLink)) {
+      toast.error('Please enter a valid GitHub link!');
+      return;
+    }
     const formData = new FormData();
     formData.append('project', JSON.stringify(project));
 
@@ -74,9 +86,10 @@ const ManageProjects = () => {
         setProjects(projects.map(p => (p._id === response.data._id ? response.data : p)));
         setEditingProjectId(null);
         setEditedImages({});
+        toast.success('Project updated successfully!');
       })
       .catch(error => {
-        console.error('Error updating project:', error);
+        toast.error('Error updating project!');
       });
   };
 
@@ -84,9 +97,10 @@ const ManageProjects = () => {
     axios.delete(`http://localhost:5000/api/projects/${projectId}`)
       .then(() => {
         setProjects(projects.filter(project => project._id !== projectId));
+        toast.success('Project deleted successfully!');
       })
       .catch(error => {
-        console.error('Error deleting project:', error);
+        toast.error('Error deleting project!');
       });
   };
 
@@ -102,6 +116,7 @@ const ManageProjects = () => {
 
   return (
     <div className="manage-projects">
+      <ToastContainer position="top-right" autoClose={3000} />
       <h2>Manage Projects</h2>
       <div className="filters">
         <div className="filter-group">

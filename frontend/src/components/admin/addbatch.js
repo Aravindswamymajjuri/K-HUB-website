@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom'; // Import useNavigate for navigation
+import { useNavigate } from 'react-router-dom';
 import './addbatch.css';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const AddBatch = () => {
   const [batchData, setBatchData] = useState({
@@ -88,14 +90,23 @@ const AddBatch = () => {
 
   const removeMember = (teamIndex, memberIndex) => {
     const newTeams = [...batchData.teams];
-    newTeams[teamIndex].members.splice(memberIndex, 1);
-    setBatchData({ ...batchData, teams: newTeams });
+    // Prevent removing the last member from a team
+    if (newTeams[teamIndex].members.length > 1) {
+      newTeams[teamIndex].members.splice(memberIndex, 1);
+      setBatchData({ ...batchData, teams: newTeams });
+    } else {
+      toast.error('Each team must have at least one member.');
+    }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!batchData.batchNumber) {
+      toast.error('Batch number is required!');
+      return;
+    }
     if (batchData.teams.length === 0) {
-      alert('Please add at least one team before submitting');
+      toast.error('Please add at least one team before submitting');
       return;
     }
 
@@ -127,16 +138,14 @@ const AddBatch = () => {
           'Content-Type': 'multipart/form-data',
         },
       });
-      console.log('Response from server:', response.data);
-      alert('Batch added successfully!');
+      toast.success('Batch added successfully!');
       setBatchData({
         batchNumber: '',
         teams: []
       });
       fetchAllBatches();
     } catch (error) {
-      console.error('Error adding batch:', error);
-      alert('Error adding batch. Please try again.');
+      toast.error('Error adding batch. Please try again.');
     }
   };
 
@@ -266,6 +275,7 @@ const AddBatch = () => {
 
   return (
     <div className="teamsadd-container">
+      <ToastContainer position="top-right" autoClose={3000} />
       <h1>.</h1>
       <button onClick={() => navigate(-1)} className="teamsadd-back-button">Back</button> {/* Back button */}
       <h1>Add New Batch</h1>

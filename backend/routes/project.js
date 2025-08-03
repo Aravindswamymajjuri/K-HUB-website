@@ -8,9 +8,16 @@ const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
 
 // Route to add a new project
-router.post('/add', upload.single('previewImage'), async (req, res) => {
+router.post('/add', async (req, res) => {
+  const { batchNumber, teamNumber, name, description, githubLink, developer } = req.body;
+  if (!batchNumber || !teamNumber || !name || !description || !githubLink || !developer) {
+    return res.status(400).json({ success: false, message: 'All fields are required.' });
+  }
+  if (!/^https?:\/\/.+/.test(githubLink)) {
+    return res.status(400).json({ success: false, message: 'Invalid GitHub link.' });
+  }
+
   try {
-    const { batchNumber, teamNumber, name, description, githubLink, developer } = req.body;
     const previewImage = req.file ? req.file.buffer : null;
     const previewImageType = req.file ? req.file.mimetype : null;
 
@@ -91,17 +98,21 @@ router.get('/team-numbers', async (req, res) => {
 
 
 
-
 // Route to update a project
-router.put('/:id', upload.single('previewImage'), async (req, res) => {
+router.put('/:id', async (req, res) => {
+  const { name, description, githubLink, developer } = req.body;
+  if (!name || !description || !githubLink || !developer) {
+    return res.status(400).json({ success: false, message: 'All fields are required.' });
+  }
+  if (!/^https?:\/\/.+/.test(githubLink)) {
+    return res.status(400).json({ success: false, message: 'Invalid GitHub link.' });
+  }
+
   try {
-    const { batchNumber, teamNumber, name, description, githubLink, developer } = req.body;
     const previewImage = req.file ? req.file.buffer : null;
     const previewImageType = req.file ? req.file.mimetype : null;
 
     const updateData = {
-      batchNumber,
-      teamNumber,
       name,
       description,
       githubLink,

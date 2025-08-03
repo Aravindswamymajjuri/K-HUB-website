@@ -2,9 +2,10 @@ import React, { useState } from 'react';
 import './Contact.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPhone, faMapMarkerAlt, faEnvelope } from '@fortawesome/free-solid-svg-icons';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
-
-
+const validateEmail = (email) => /\S+@\S+\.\S+/.test(email);
 
 const Contact = () => {
   const [formData, setFormData] = useState({
@@ -23,6 +24,14 @@ const Contact = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!formData.name || !formData.email || !formData.message) {
+      toast.error('All fields are required!');
+      return;
+    }
+    if (!validateEmail(formData.email)) {
+      toast.error('Please enter a valid email address!');
+      return;
+    }
     try {
       const response = await fetch('http://localhost:5000/api/contact', {
         method: 'POST',
@@ -33,17 +42,18 @@ const Contact = () => {
       });
       const data = await response.json();
       if (response.ok) {
-        setResponseMessage(data.message);
+        toast.success(data.message || 'Message sent successfully!');
       } else {
-        setResponseMessage(data.error);
+        toast.error(data.error || 'Failed to send message.');
       }
     } catch (error) {
-      setResponseMessage('Message Sent Successfully');
+      toast.success('Message Sent Successfully');
     }
   };
 
   return (
     <div className="contact-container">
+      <ToastContainer position="top-right" autoClose={3000} />
       <h2>.</h2>
       <div className="contact-content">
         <div className="contact-form">

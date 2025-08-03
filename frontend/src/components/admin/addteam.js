@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import './addteam.css';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const AddTeam = () => {
   const [teamData, setTeamData] = useState({
@@ -59,6 +61,10 @@ const AddTeam = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!teamData.teamLeader.name || !teamData.teamMentor.name || teamData.members.length === 0) {
+      toast.error('Team Leader, Mentor, and at least one member are required!');
+      return;
+    }
 
     const formData = new FormData();
     formData.append('data', JSON.stringify(teamData));
@@ -83,16 +89,14 @@ const AddTeam = () => {
           'Content-Type': 'multipart/form-data',
         },
       });
-      console.log('Response from server:', response.data);
-      alert('Team added successfully!');
+      toast.success('Team added successfully!');
       setTeamData({
         teamLeader: { name: '', role: 'Lead', subteam: 'a', git: '', linkedin: '', image: null },
         teamMentor: { name: '', role: 'Mentor', subteam: 'a', git: '', linkedin: '', image: null },
         members: [{ name: '', role: 'Senior Developer', subteam: 'a', git: '', linkedin: '', image: null }]
       });
     } catch (error) {
-      console.error('Error adding team:', error);
-      alert('Error adding team. Please try again.');
+      toast.error('Error adding team. Please try again.');
     }
   };
 
@@ -148,6 +152,7 @@ const AddTeam = () => {
 
   return (
     <div className="container">
+      <ToastContainer position="top-right" autoClose={3000} />
       <h2>Add Team</h2>
       <form onSubmit={handleSubmit}>
         <div className="form-section">

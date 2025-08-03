@@ -3,7 +3,8 @@ const nodemailer = require('nodemailer');
 // Admin credentials: email => password
 const adminCredentials = {
   'aravindswamymajjuri143@gmail.com': 'aravindswamymajjuri143@gmail.com',
-  'kadaripavani1@gmail.com': 'kadaripavani1@gmail.com'
+  'kadaripavani1@gmail.com': 'kadaripavani1@gmail.com',
+  'veerendrarevu@gmail.com0' : 'veerendrarevu@gmail.com'
 };
 
 let generatedOtps = {}; // Stores OTP per admin email

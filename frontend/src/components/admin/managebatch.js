@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import './managebatch.css'; // Ensure this is the correct path to your CSS file
+import './managebatch.css';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const ManageBatch = () => {
   const [batches, setBatches] = useState([]);
@@ -81,6 +83,10 @@ const ManageBatch = () => {
   };
 
   const handleSaveEdit = async () => {
+    if (!editingMember.name) {
+      toast.error('Name is required!');
+      return;
+    }
     try {
       let updatedTeam = { ...teamData };
       if (editingMember.role === 'teamLeader') {
@@ -97,8 +103,9 @@ const ManageBatch = () => {
       setEditingMember(null);
       // Refresh team data
       handleTeamClick(selectedTeam);
+      toast.success('Member updated successfully!');
     } catch (error) {
-      console.error('Error updating team member:', error);
+      toast.error('Error updating team member!');
     }
   };
 
@@ -106,13 +113,13 @@ const ManageBatch = () => {
     if (!window.confirm('Are you sure you want to delete this team member?')) {
       return;
     }
-
     try {
       await axios.delete(`http://localhost:5000/api/teams/${selectedBatch}/${selectedTeam}/${memberId}`);
       // Refresh team data
       handleTeamClick(selectedTeam);
+      toast.success('Member deleted successfully!');
     } catch (error) {
-      console.error('Error deleting team member:', error);
+      toast.error('Error deleting team member!');
     }
   };
 
@@ -120,15 +127,15 @@ const ManageBatch = () => {
     if (!window.confirm('Are you sure you want to delete this team?')) {
       return;
     }
-
     try {
       await axios.delete(`http://localhost:5000/api/teams/${selectedBatch}/${selectedTeam}`);
       setSelectedTeam(null);
       setTeamData(null);
       // Refresh batches and teams
       fetchBatches();
+      toast.success('Team deleted successfully!');
     } catch (error) {
-      console.error('Error deleting team:', error);
+      toast.error('Error deleting team!');
     }
   };
 
@@ -136,7 +143,6 @@ const ManageBatch = () => {
     if (!window.confirm('Are you sure you want to delete this batch?')) {
       return;
     }
-
     try {
       await axios.delete(`http://localhost:5000/api/batches/${selectedBatch}`);
       setSelectedBatch('');
@@ -145,8 +151,9 @@ const ManageBatch = () => {
       setTeamData(null);
       // Refresh batches
       fetchBatches();
+      toast.success('Batch deleted successfully!');
     } catch (error) {
-      console.error('Error deleting batch:', error);
+      toast.error('Error deleting batch!');
     }
   };
 
@@ -196,6 +203,7 @@ const ManageBatch = () => {
 
   return (
     <div className="managebatch-div">
+      <ToastContainer position="top-right" autoClose={3000} />
       <h1 className="managebatch-h1">Manage Batch</h1>
       <select value={selectedBatch} onChange={handleBatchChange} className="managebatch-select">
         <option value="">Select a batch</option>

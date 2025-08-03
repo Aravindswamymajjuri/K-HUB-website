@@ -3,6 +3,10 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import './adminlogin.css';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
+const validateEmail = (email) => /\S+@\S+\.\S+/.test(email);
 
 const AdminLogin = () => {
   const [email, setEmail] = useState('');
@@ -16,17 +20,26 @@ const AdminLogin = () => {
 
   const handleLogin = async (e) => {
     e.preventDefault();
+    if (!validateEmail(email)) {
+      toast.error('Please enter a valid email address!');
+      return;
+    }
+    if (!password) {
+      toast.error('Password is required!');
+      return;
+    }
     setLoading(true);
     setError('');
     try {
       const response = await axios.post('http://localhost:5000/api/login', { email, password });
       if (response.data.success) {
         setOtpSent(true);
+        toast.success('OTP sent to your email!');
       } else {
-        setError('Invalid email or password!');
+        toast.error('Invalid email or password!');
       }
     } catch (error) {
-      setError('Login failed! Please try again.');
+      toast.error('Login failed! Please try again.');
     } finally {
       setLoading(false);
     }
@@ -34,6 +47,10 @@ const AdminLogin = () => {
 
   const handleOtpVerification = async (e) => {
     e.preventDefault();
+    if (!otp || otp.length !== 6) {
+      toast.error('Please enter a valid 6-digit OTP!');
+      return;
+    }
     setLoading(true);
     setError('');
     try {
@@ -42,15 +59,14 @@ const AdminLogin = () => {
         localStorage.setItem('isAuthenticated', 'true');
         localStorage.setItem('userEmail', email);
         localStorage.setItem('loginTimestamp', Date.now().toString());
-        alert('Login successful!');
-        // Force full reload so that the auth state updates for the whole app
+        toast.success('Login successful!');
         window.location.href = '/admin';
         return;
       } else {
-        setError('Invalid OTP!');
+        toast.error('Invalid OTP!');
       }
     } catch (error) {
-      setError(`OTP verification failed! ${error.response?.data?.message || 'Please try again.'}`);
+      toast.error(`OTP verification failed! ${error.response?.data?.message || 'Please try again.'}`);
     } finally {
       setLoading(false);
     }
@@ -63,12 +79,12 @@ const AdminLogin = () => {
     try {
       const response = await axios.post('http://localhost:5000/api/login', { email, password });
       if (response.data.success) {
-        alert('OTP resent successfully!');
+        toast.success('OTP resent successfully!');
       } else {
-        setError('Failed to resend OTP!');
+        toast.error('Failed to resend OTP!');
       }
     } catch (error) {
-      setError('Failed to resend OTP! Please try again.');
+      toast.error('Failed to resend OTP! Please try again.');
     } finally {
       setLoading(false);
     }
@@ -76,6 +92,7 @@ const AdminLogin = () => {
 
   return (
     <div className="login-container">
+      <ToastContainer position="top-right" autoClose={3000} />
       <h2>Admin Login</h2>
       {error && <p className="error-message">{error}</p>}
 

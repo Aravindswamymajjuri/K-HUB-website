@@ -1,5 +1,9 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
+const validateUrl = url => /^https?:\/\/.+/.test(url);
 
 const AddProject = () => {
   const [project, setProject] = useState({
@@ -22,6 +26,14 @@ const AddProject = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!project.batchNumber || !project.teamNumber || !project.name || !project.description || !project.githubLink || !project.developer) {
+      toast.error('All fields are required!');
+      return;
+    }
+    if (!validateUrl(project.githubLink)) {
+      toast.error('Please enter a valid GitHub link!');
+      return;
+    }
     const formData = new FormData();
     formData.append('batchNumber', project.batchNumber);
     formData.append('teamNumber', project.teamNumber);
@@ -39,9 +51,9 @@ const AddProject = () => {
           'Content-Type': 'multipart/form-data'
         }
       });
-      console.log('Project added successfully:', response.data);
+      toast.success('Project added successfully!');
     } catch (error) {
-      console.error('Error adding project:', error);
+      toast.error('Error adding project!');
     }
   };
 
@@ -89,75 +101,78 @@ const AddProject = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit} style={formStyle}>
-      <input
-        type="text"
-        name="batchNumber"
-        placeholder="Batch Number"
-        value={project.batchNumber}
-        onChange={handleChange}
-        required
-        style={inputStyle}
-      />
-      <input
-        type="number"
-        name="teamNumber"
-        placeholder="Team Number"
-        value={project.teamNumber}
-        onChange={handleChange}
-        required
-        style={inputStyle}
-      />
-      <input
-        type="text"
-        name="name"
-        placeholder="Project Name"
-        value={project.name}
-        onChange={handleChange}
-        required
-        style={inputStyle}
-      />
-      <textarea
-        name="description"
-        placeholder="Project Description"
-        value={project.description}
-        onChange={handleChange}
-        required
-        style={textareaStyle}
-      ></textarea>
-      <input
-        type="text"
-        name="githubLink"
-        placeholder="GitHub Link"
-        value={project.githubLink}
-        onChange={handleChange}
-        required
-        style={inputStyle}
-      />
-      <input
-        type="text"
-        name="developer"
-        placeholder="Developer"
-        value={project.developer}
-        onChange={handleChange}
-        required
-        style={inputStyle}
-      />
-      <input
-        type="file"
-        name="previewImage"
-        onChange={handleFileChange}
-        style={inputStyle}
-      />
-      <button
-        type="submit"
-        style={buttonStyle}
-        onMouseOver={(e) => e.currentTarget.style.backgroundColor = buttonHoverStyle.backgroundColor}
-        onMouseOut={(e) => e.currentTarget.style.backgroundColor = ''}
-      >
-        Add Project
-      </button>
-    </form>
+    <>
+      <ToastContainer position="top-right" autoClose={3000} />
+      <form onSubmit={handleSubmit} style={formStyle}>
+        <input
+          type="text"
+          name="batchNumber"
+          placeholder="Batch Number"
+          value={project.batchNumber}
+          onChange={handleChange}
+          required
+          style={inputStyle}
+        />
+        <input
+          type="number"
+          name="teamNumber"
+          placeholder="Team Number"
+          value={project.teamNumber}
+          onChange={handleChange}
+          required
+          style={inputStyle}
+        />
+        <input
+          type="text"
+          name="name"
+          placeholder="Project Name"
+          value={project.name}
+          onChange={handleChange}
+          required
+          style={inputStyle}
+        />
+        <textarea
+          name="description"
+          placeholder="Project Description"
+          value={project.description}
+          onChange={handleChange}
+          required
+          style={textareaStyle}
+        ></textarea>
+        <input
+          type="text"
+          name="githubLink"
+          placeholder="GitHub Link"
+          value={project.githubLink}
+          onChange={handleChange}
+          required
+          style={inputStyle}
+        />
+        <input
+          type="text"
+          name="developer"
+          placeholder="Developer"
+          value={project.developer}
+          onChange={handleChange}
+          required
+          style={inputStyle}
+        />
+        <input
+          type="file"
+          name="previewImage"
+          onChange={handleFileChange}
+          style={inputStyle}
+        />
+        <button
+          type="submit"
+          style={buttonStyle}
+          onMouseOver={(e) => e.currentTarget.style.backgroundColor = buttonHoverStyle.backgroundColor}
+          onMouseOut={(e) => e.currentTarget.style.backgroundColor = ''}
+        >
+          Add Project
+        </button>
+      </form>
+    </>
   );
 };
 
