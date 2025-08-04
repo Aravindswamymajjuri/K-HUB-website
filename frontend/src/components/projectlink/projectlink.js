@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Eye, ExternalLink, Github, ArrowLeft, Users } from 'lucide-react';
-import { useLocation } from 'react-router-dom'; // 👈 Add this for route-based resets
+import { useParams, useNavigate } from 'react-router-dom';
 import './projectlink.css';
 
 const API_BASE_URL = 'http://localhost:5000/api/projects';
@@ -12,7 +12,8 @@ const ProjectShowcase = () => {
   const [loading, setLoading] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
 
-  const location = useLocation(); // React Router hook
+  const { batchNumber, teamNumber } = useParams();
+  const navigate = useNavigate();
 
   // Fetch all batches and their teams
   const fetchBatches = async () => {
@@ -22,6 +23,22 @@ const ProjectShowcase = () => {
       const data = await response.json();
       if (data.success) {
         setBatches(data.data);
+        
+        // If we have URL parameters, set the appropriate states
+        if (batchNumber && data.data.length > 0) {
+          const batch = data.data.find(b => b.batchNumber === parseInt(batchNumber));
+          if (batch) {
+            setSelectedBatch(batch);
+            
+            // If we also have a team number, select the team
+            if (teamNumber && batch.teams) {
+              const team = batch.teams.find(t => t.teamNumber === parseInt(teamNumber));
+              if (team) {
+                setSelectedProject({ ...team, batchNumber: batch.batchNumber });
+              }
+            }
+          }
+        }
       }
     } catch (error) {
       console.error('Error fetching batches:', error);
@@ -30,13 +47,33 @@ const ProjectShowcase = () => {
     }
   };
 
-  // Always reset selection on route/path change (batch list view)
   useEffect(() => {
+    fetchBatches();
+  }, [batchNumber, teamNumber]);
+
+  // Handle navigation with URL updates
+  const handleBatchSelect = (batch) => {
+    setSelectedBatch(batch);
+    setSelectedProject(null);
+    navigate(`/projectlink/batch/${batch.batchNumber}`);
+  };
+
+  const handleProjectSelect = (team) => {
+    const project = { ...team, batchNumber: selectedBatch.batchNumber };
+    setSelectedProject(project);
+    navigate(`/projectlink/batch/${selectedBatch.batchNumber}/team/${team.teamNumber}`);
+  };
+
+  const handleBackToBatches = () => {
     setSelectedBatch(null);
     setSelectedProject(null);
-    fetchBatches();
-    // eslint-disable-next-line
-  }, [location.pathname]);
+    navigate('/projectlink');
+  };
+
+  const handleBackToProjects = () => {
+    setSelectedProject(null);
+    navigate(`/projectlink/batch/${selectedBatch.batchNumber}`);
+  };
 
   // ===== 1. Batch List with Search Bar =====
   if (!selectedBatch && !selectedProject) {
@@ -79,7 +116,7 @@ const ProjectShowcase = () => {
                 .map(batch => (
                   <div
                     key={batch._id}
-                    onClick={() => setSelectedBatch(batch)}
+                    onClick={() => handleBatchSelect(batch)}
                     style={{
                       cursor: "pointer",
                       background: "#fff",
@@ -118,7 +155,7 @@ const ProjectShowcase = () => {
     return (
       <div className="showcase-container">
         <header className="showcase-header">
-          <button className="back-button" style={{marginBottom: 16}} onClick={() => setSelectedBatch(null)}>
+          <button className="back-button" style={{marginBottom: 16}} onClick={handleBackToBatches}>
             <ArrowLeft size={20} /> All Batches
           </button>
           <h2 className="batch-title" style={{marginTop: 18}}>
@@ -136,7 +173,7 @@ const ProjectShowcase = () => {
                 <article
                   key={team._id}
                   className="project-card"
-                  onClick={() => setSelectedProject({ ...team, batchNumber: selectedBatch.batchNumber })}
+                  onClick={() => handleProjectSelect(team)}
                 >
                   {/* Card image */}
                   <div className="card-image-container">
@@ -184,7 +221,7 @@ const ProjectShowcase = () => {
     return (
       <div className="details-container">
         <header className="details-header">
-          <button onClick={() => setSelectedProject(null)} className="back-button">
+          <button onClick={handleBackToProjects} className="back-button">
             <ArrowLeft size={20} />
             Back to Projects
           </button>

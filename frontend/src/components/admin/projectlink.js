@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Plus, Edit2, Trash2, Eye, Download, Upload, X, Save } from 'lucide-react';
+import { useParams, useNavigate } from 'react-router-dom';
 import '../admin/projectlink.css'; // Adjust path as needed
 
 const API_BASE_URL = 'http://localhost:5000/api/projects'; // Adjust as needed
@@ -29,6 +30,9 @@ const ProjectBatchApp = () => {
     video: null
   });
 
+  const { batchNumber } = useParams();
+  const navigate = useNavigate();
+
   // Show confirmation dialog
   const showConfirmation = (title, message, onConfirm) => {
     setConfirmDialog({
@@ -52,6 +56,14 @@ const ProjectBatchApp = () => {
       const data = await response.json();
       if (data.success) {
         setBatches(data.data);
+        
+        // If we have a batchNumber parameter, set the selected batch
+        if (batchNumber && data.data.length > 0) {
+          const batch = data.data.find(b => b.batchNumber === parseInt(batchNumber));
+          if (batch) {
+            setSelectedBatch(batch);
+          }
+        }
       }
     } catch (error) {
       alert('Error fetching batches: ' + error.message);
@@ -161,21 +173,22 @@ const ProjectBatchApp = () => {
   };
 
   // Delete batch
-  const deleteBatch = async (batchNumber) => {
+  const deleteBatch = async (batchNum) => {
     showConfirmation(
       'Delete Batch',
       'Are you sure you want to delete this batch? This action cannot be undone.',
       async () => {
         try {
-          const response = await fetch(`${API_BASE_URL}/batches/${batchNumber}`, {
+          const response = await fetch(`${API_BASE_URL}/batches/${batchNum}`, {
             method: 'DELETE'
           });
           
           const data = await response.json();
           if (data.success) {
             fetchBatches();
-            if (selectedBatch?.batchNumber === batchNumber) {
+            if (selectedBatch?.batchNumber === batchNum) {
               setSelectedBatch(null);
+              navigate('/addprojectlink'); // Navigate back to main view
             }
             alert('Batch deleted successfully!');
           } else {
@@ -215,17 +228,31 @@ const ProjectBatchApp = () => {
     );
   };
 
-  // Fetch batch details
-  const fetchBatchDetails = async (batchNumber) => {
+  // Fetch batch details with navigation
+  const fetchBatchDetails = async (batchNum) => {
     try {
-      const response = await fetch(`${API_BASE_URL}/batches/${batchNumber}`);
+      const response = await fetch(`${API_BASE_URL}/batches/${batchNum}`);
       const data = await response.json();
       if (data.success) {
         setSelectedBatch(data.data);
+        // Update URL to reflect selected batch
+        navigate(`/addprojectlink/batch/${batchNum}`);
       }
     } catch (error) {
       alert('Error fetching batch details: ' + error.message);
     }
+  };
+
+  // Handle batch selection with navigation
+  const handleBatchSelect = (batch) => {
+    setSelectedBatch(batch);
+    navigate(`/addprojectlink/batch/${batch.batchNumber}`);
+  };
+
+  // Handle back to all batches
+  const handleBackToBatches = () => {
+    setSelectedBatch(null);
+    navigate('/addprojectlink');
   };
 
   // Reset team form
@@ -274,7 +301,7 @@ const ProjectBatchApp = () => {
 
   useEffect(() => {
     fetchBatches();
-  }, []);
+  }, [batchNumber]);
 
   return (
     <div className="project-batch-container">
@@ -303,7 +330,7 @@ const ProjectBatchApp = () => {
                     <div
                       key={batch._id}
                       className={`batch-item ${selectedBatch?._id === batch._id ? 'selected' : ''}`}
-                      onClick={() => fetchBatchDetails(batch.batchNumber)}
+                      onClick={() => handleBatchSelect(batch)}
                     >
                       <div className="batch-item-content">
                         <div className="batch-info">
@@ -334,6 +361,22 @@ const ProjectBatchApp = () => {
                 <div className="teams-header">
                   <h2 className="teams-title">
                     Batch {selectedBatch.batchNumber} Teams
+                    <button
+                      onClick={handleBackToBatches}
+                      className="back-to-batches-btn"
+                      style={{
+                        marginLeft: '1rem',
+                        padding: '0.5rem 1rem',
+                        fontSize: '0.875rem',
+                        backgroundColor: '#6b7280',
+                        color: 'white',
+                        border: 'none',
+                        borderRadius: '0.375rem',
+                        cursor: 'pointer'
+                      }}
+                    >
+                      ← All Batches
+                    </button>
                   </h2>
                   <button
                     onClick={() => setShowAddTeam(true)}

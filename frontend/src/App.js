@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter as Router, Route, Routes ,Navigate} from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
 import Navbar from './components/Navbar/navbar';
 import Event from './components/Events/viewevent';
 import FullEvent from './components/Events/fullevent';
@@ -39,28 +39,8 @@ import './App.css';
 import Footer from './components/Home/Footer';
 import ProjectList from './components/projectlink/projectlink';
 import ProjectManager from './components/admin/projectlink';
-import Intership from './components/admin/intership'; // Assuming this is the correct import for the internship component
-import Inter from './components/Intership/internship'; // Assuming this is the correct import for the internship component
-// const ProtectedRoute = ({ children }) => {
-//   const isAuthenticated = localStorage.getItem('isAuthenticated') === 'true';
-//   const loginTimestamp = localStorage.getItem('loginTimestamp');
-  
-//   // Optional: Check if login is still valid (e.g., within 24 hours)
-//   const isLoginValid = loginTimestamp && (Date.now() - parseInt(loginTimestamp)) < 24 * 60 * 60 * 1000;
-  
-//   console.log('ProtectedRoute check:', { 
-//     isAuthenticated, 
-//     loginTimestamp, 
-//     isLoginValid: isLoginValid !== false 
-//   });
-  
-//   if (!isAuthenticated || isLoginValid === false) {
-//     console.log('Redirecting to login - not authenticated or login expired');
-//     return <Navigate to="/login" replace />;
-//   }
-  
-//   return children;
-// };
+import Intership from './components/admin/intership'; // Updated component
+import Inter from './components/Intership/internship';
 
 const App = () => {
   const isAuthenticated = useAuth();
@@ -69,7 +49,7 @@ const App = () => {
       <div>
         <Navbar />
         <Routes>
-        <Route path="/" element={<Landpage />} />
+          <Route path="/" element={<Landpage />} />
           <Route path="/events" element={<Event />} />
           <Route path="/fullevents/:eventId" element={<FullEvent />} />
           <Route path="/teams" element={<BatchView />} />
@@ -88,7 +68,7 @@ const App = () => {
           <Route path="/viewhackathon" element={<ViewHackathon/>} />
 
           <Route path="/admin" element={isAuthenticated ? <AdminPage /> : <Navigate to="/login" />} />
-            <Route path="/managebatch" element={<ManageBatch />} />
+          <Route path="/managebatch" element={<ManageBatch />} />
           <Route path="/addbatch" element={<AddBatch />} />
           <Route path="/addteam" element={<AddTeam />} />
           <Route path="/addmember" element={<AddMember />} />
@@ -97,29 +77,41 @@ const App = () => {
           <Route path="/addevent" element={isAuthenticated ? <AddEvent /> : <Navigate to="/login" />} />
           <Route path="/manageevent" element={isAuthenticated ? <ManageEvent /> : <Navigate to="/login" />} />
 
-
           {/* news routes */}
           <Route path="/managenews" element={isAuthenticated ? <ManageNews /> : <Navigate to="/login" />} /> 
           <Route path="/addnews" element={isAuthenticated ? <AddNews /> : <Navigate to="/login" />} />
           <Route path="/addposter" element={isAuthenticated ? <AddPoster /> : <Navigate to="/login" />} />
 
-            {/* achivement routes */}
-            <Route path="/addachivements" element={isAuthenticated ? <AddAchievement /> : <Navigate to="/login" />} /> 
+          {/* achievement routes */}
+          <Route path="/addachivements" element={isAuthenticated ? <AddAchievement /> : <Navigate to="/login" />} /> 
           <Route path="/manageachivements" element={isAuthenticated ? <ManageAchievement /> : <Navigate to="/login" />} />
-
 
           {/* hackathon routes */}
           <Route path="/managehackathon" element={isAuthenticated ? <ManageHackathon /> : <Navigate to="/login" />}/>
-
           <Route path="/addhackathon" element={isAuthenticated ? <AddHackathon /> : <Navigate to="/login" />} />
 
-            {/* project routes */}
-            <Route path="/addproject" element={isAuthenticated ? <AddProject/> : <Navigate to="/login" />}/>
-            <Route path="/manageproject" element={isAuthenticated ? <ManageProjects /> : <Navigate to="/login" />} />
+          {/* project routes */}
+          <Route path="/addproject" element={isAuthenticated ? <AddProject/> : <Navigate to="/login" />}/>
+          <Route path="/manageproject" element={isAuthenticated ? <ManageProjects /> : <Navigate to="/login" />} />
+          
+          {/* Updated project showcase routes with parameters */}
           <Route path="/projectlink" element={<ProjectList />} />
-           <Route path="/addprojectlink" element={isAuthenticated ? <ProjectManager /> : <Navigate to="/login" />} />
-           <Route path="/addinternship" element={<Intership />} />
-           <Route path="/internship" element={<Inter />} />
+          <Route path="/projectlink/batch/:batchNumber" element={<ProjectList />} />
+          <Route path="/projectlink/batch/:batchNumber/team/:teamNumber" element={<ProjectList />} />
+          
+          {/* Admin project management routes with parameters */}
+          <Route path="/addprojectlink" element={isAuthenticated ? <ProjectManager /> : <Navigate to="/login" />} />
+          <Route path="/addprojectlink/batch/:batchNumber" element={isAuthenticated ? <ProjectManager /> : <Navigate to="/login" />} />
+          
+          {/* Updated internship routes - ADMIN SIDE */}
+          <Route path="/addinternship" element={isAuthenticated ? <Intership /> : <Navigate to="/login" />} />
+          <Route path="/addinternship/batch/:batchNumber" element={isAuthenticated ? <Intership /> : <Navigate to="/login" />} />
+          <Route path="/addinternship/batch/:batchNumber/internship/:internshipId" element={isAuthenticated ? <Intership /> : <Navigate to="/login" />} />
+          
+          {/* Public internship viewing routes */}
+          <Route path="/internship" element={<Inter />} />
+          <Route path="/internship/batch/:batchNumber" element={<Inter />} />
+          <Route path="/internship/batch/:batchNumber/internship/:internshipId" element={<Inter />} />
         </Routes>
         <Footer />
       </div>
