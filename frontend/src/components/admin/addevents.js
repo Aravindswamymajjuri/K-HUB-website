@@ -64,7 +64,7 @@ const AddEvent = () => {
     <div className="addevent-container">
       <form onSubmit={handleSubmit} className="addevent-form">
         <h1>Add New Event</h1>
-        <button type="button" onClick={() => navigate(-1)} className="button">Back</button>
+        <button type="button" onClick={() => navigate(-1)} className="buttonss">Back</button>
         
         <div>
           <label>Event Name:</label>

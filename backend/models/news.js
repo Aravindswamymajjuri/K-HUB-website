@@ -14,6 +14,14 @@ const newsItemSchema = new mongoose.Schema({
 
 const newsSchema = new mongoose.Schema({
   items: [newsItemSchema],
+
+  // PDF storage fields
+  pdf: {
+    data: Buffer,
+    contentType: String,
+    fileName: String
+  },
+
   createdAt: {
     type: Date,
     default: Date.now

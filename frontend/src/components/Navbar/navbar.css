@@ -30,6 +30,10 @@
     width: auto;
 }
 
+.logout-btns
+{
+    width: 100%;
+}
 
 /* Navbar Menu Styles */
 .navbar-menu {

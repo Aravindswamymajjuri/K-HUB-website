@@ -1,150 +1,128 @@
-/* Container styling */
-.addevents-container {
-    max-width: 1000px;
-    margin: 90px auto;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    background-color: #f9f9f9;
-    
-}
-
-/* Heading styling */
-.addevents-container h1 {
-    text-align: center;
-    color: #333;
-    margin-bottom: 20px;
-}
-
-/* Form styling */
-.addevents-form {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-    padding-top: 100px;
-}
-
-/* Input field styling */
-.addevents-input[type="text"],
-.addevents-textarea,
-.addevents-input[type="file"] {
-    padding: 12px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    font-size: 16px;
-}
-
-/* Textarea specific styling */
-.addevents-textarea {
-    resize: vertical;
-    min-height: 00px;
-}
-
-/* File input styling */
-.addevents-input[type="file"] {
-    border: none;
-    padding: 0;
-}
-
-/* Button styling */
-.addevents-button {
-    /* padding: 10px 60px; */
-    width:150px;
-    border: none;
-    border-radius: 4px;
-    background-color: #007bff;
-    color: #fff;
-    font-size: 16px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-}
-
-/* Button hover effect */
-.addevents-button:hover {
-    background-color: #0056b3;
-}
-
-/* SubEvent container styling */
-.addevents-sub-event-container {
-    padding: 15px;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    background-color: #fff;
-    margin-bottom: 10px;
-}
-
-/* SubEvent heading styling */
-.addevents-sub-event-container h3 {
-    margin-top: 0;
-    color: #007bff;
-}
-
-/* SubEvent image container styling */
-.addevents-sub-event-image-container {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-}
-
-/* Image input container styling */
-.addevents-image-input-container {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-/* Remove image button styling */
-.addevents-sub-event-image-container button {
-    background-color: #dc3545;
-}
-
-/* Remove image button hover effect */
-.addevents-sub-event-image-container button:hover {
-    background-color: #c82333;
-}
-
-/* Add Event specific styles */
 .addevent-container {
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  background: #f4f4f9;
+  max-width: 700px;
+  margin: 30px auto;
+  padding: 20px 30px;
+  background-color: #f9fafb;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgb(0 0 0 / 0.1);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: #333;
+  padding-top:70px ;
 }
 
-.addevent-form {
-  background: #fff;
-  border-radius: 16px;
-  box-shadow: 0 8px 32px rgba(0,0,0,0.15);
-  padding: 40px 30px;
-  max-width: 600px;
-  width: 100%;
-  margin: 0 auto;
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
+.addevent-form h1 {
+  text-align: center;
+  margin-bottom: 25px;
+  font-weight: 700;
+  color: #222;
 }
 
-.addevent-form input,
-.addevent-form textarea {
-  border-radius: 6px;
-  border: 1px solid #ced4da;
-  padding: 10px;
-  margin-bottom: 10px;
-}
-
-.addevent-form button {
-  border-radius: 6px;
-  padding: 10px 20px;
-  background: #053c77;
-  color: #fff;
-  border: none;
-  margin-top: 10px;
+.buttonss {
   cursor: pointer;
-  transition: background 0.2s;
+  font-weight: 600;
+  border-radius: 6px;
+  padding: 10px 18px;
+  border: none;
+  transition: background-color 0.3s ease;
+  user-select: none;
+  width: 20%;
 }
 
-.addevent-form button:hover {
-  background: #021f40;
+button.button {
+  background-color: #bbb;
+  color: #444;
+  margin-bottom: 15px;
+}
+
+button.button:hover {
+  background-color: #999;
+  color: #222;
+}
+
+button[type="button"] {
+  background-color: #4a90e2;
+  color: #fff;
+  margin-right: 12px;
+}
+
+button[type="button"]:hover {
+  background-color: #357abd;
+}
+
+button[type="submit"] {
+  background-color: #27ae60;
+  color: white;
+}
+
+button[type="submit"]:hover {
+  background-color: #219150;
+}
+
+/* .addevent-form > div {
+  margin-bottom: 20px;
+} */
+
+label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 6px;
+  color: #555;
+}
+
+input[type="text"],
+textarea,
+input[type="file"] {
+  width: 100%;
+  padding: 9px 12px;
+  font-size: 15px;
+  border: 1.8px solid #ccc;
+  border-radius: 6px;
+  transition: border-color 0.25s ease;
+  box-sizing: border-box;
+}
+
+input[type="text"]:focus,
+textarea:focus,
+input[type="file"]:focus {
+  outline: none;
+  border-color: #4a90e2;
+  box-shadow: 0 0 6px rgba(74, 144, 226, 0.4);
+}
+
+textarea {
+  resize: vertical;
+  min-height: 60px;
+  font-family: inherit;
+}
+
+.subevent-section {
+  border: 1px solid #ddd;
+  background: white;
+  padding: 15px 20px;
+  margin-bottom: 25px;
+  border-radius: 8px;
+  box-shadow: 0 1px 4px rgb(0 0 0 / 0.05);
+}
+
+.subevent-section h3 {
+  margin-top: 0;
+  margin-bottom: 15px;
+  color: #2c3e50;
+  font-weight: 700;
+}
+
+@media (max-width: 480px) {
+  .addevent-container {
+    margin: 20px 15px;
+    padding: 15px 20px;
+  }
+
+  button {
+    width: 100%;
+    margin-bottom: 12px;
+  }
+
+  button[type="button"] {
+    margin-right: 0;
+  }
 }
