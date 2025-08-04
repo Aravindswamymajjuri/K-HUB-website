@@ -1,10 +1,23 @@
 import React, { useState, useEffect } from 'react';
+import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import './internship.css';
 
 const API_BASE_URL = 'http://localhost:5000/api/interships'; // Adjusted to backend port 5000
 
 const App = () => {
-  const [currentView, setCurrentView] = useState('batches'); // 'batches', 'internships', 'details'
+  const { batchNumber, internshipId } = useParams();
+  const navigate = useNavigate();
+  const location = useLocation();
+  
+  // Determine current view based on URL
+  const getCurrentView = () => {
+    if (internshipId) return 'details';
+    if (batchNumber) return 'internships';
+    return 'batches';
+  };
+
+  const currentView = getCurrentView();
+  
   const [batches, setBatches] = useState([]);
   const [internships, setInternships] = useState([]);
   const [selectedBatch, setSelectedBatch] = useState(null);
@@ -36,16 +49,21 @@ const App = () => {
   };
 
   // Fetch internships for a specific batch
-  const fetchInternships = async (batchNumber) => {
+  const fetchInternships = async (batchNum) => {
     setLoading(true);
     setError('');
     try {
-      const response = await fetch(`${API_BASE_URL}/batches/${batchNumber}/internships`);
+      const response = await fetch(`${API_BASE_URL}/batches/${batchNum}/internships`);
       const data = await response.json();
       
       if (data.success) {
         setInternships(data.data);
         setPagination(data.pagination);
+        
+        // Find and set the selected batch
+        const batch = batches.find(b => b.batchNumber === parseInt(batchNum)) || 
+                    { batchNumber: parseInt(batchNum) };
+        setSelectedBatch(batch);
       } else {
         setError(data.message || 'Failed to fetch internships');
       }
@@ -58,15 +76,22 @@ const App = () => {
   };
 
   // Fetch specific internship details
-  const fetchInternshipDetails = async (batchNumber, internshipId) => {
+  const fetchInternshipDetails = async (batchNum, internId) => {
     setLoading(true);
     setError('');
     try {
-      const response = await fetch(`${API_BASE_URL}/batches/${batchNumber}/internships/${internshipId}`);
+      const response = await fetch(`${API_BASE_URL}/batches/${batchNum}/internships/${internId}`);
       const data = await response.json();
       
       if (data.success) {
         setSelectedInternship(data.data);
+        
+        // Set selected batch if not already set
+        if (!selectedBatch) {
+          const batch = batches.find(b => b.batchNumber === parseInt(batchNum)) || 
+                      { batchNumber: parseInt(batchNum) };
+          setSelectedBatch(batch);
+        }
       } else {
         setError(data.message || 'Failed to fetch internship details');
       }
@@ -78,35 +103,49 @@ const App = () => {
     }
   };
 
-  // Handle batch selection
+  // Handle batch selection - navigate to batch route
   const handleBatchClick = (batch) => {
-    setSelectedBatch(batch);
-    setCurrentView('internships');
-    fetchInternships(batch.batchNumber);
+    navigate(`/internship/batch/${batch.batchNumber}`);
   };
 
-  // Handle internship selection
+  // Handle internship selection - navigate to internship details route
   const handleInternshipClick = (internship) => {
-    setCurrentView('details');
-    fetchInternshipDetails(selectedBatch.batchNumber, internship._id);
+    navigate(`/internship/batch/${batchNumber}/internship/${internship._id}`);
   };
 
-  // Handle back navigation
+  // Handle back navigation using router
   const handleBack = () => {
     if (currentView === 'details') {
-      setCurrentView('internships');
-      setSelectedInternship(null);
+      navigate(`/internship/batch/${batchNumber}`);
     } else if (currentView === 'internships') {
-      setCurrentView('batches');
-      setSelectedBatch(null);
-      setInternships([]);
+      navigate('/internship');
     }
   };
 
-  // Load batches on component mount
+  // Load data based on current route
   useEffect(() => {
-    fetchBatches();
-  }, []);
+    if (currentView === 'batches') {
+      fetchBatches();
+    } else if (currentView === 'internships' && batchNumber) {
+      // First fetch batches if not loaded, then fetch internships
+      if (batches.length === 0) {
+        fetchBatches().then(() => {
+          fetchInternships(batchNumber);
+        });
+      } else {
+        fetchInternships(batchNumber);
+      }
+    } else if (currentView === 'details' && batchNumber && internshipId) {
+      // First fetch batches if not loaded, then fetch internship details
+      if (batches.length === 0) {
+        fetchBatches().then(() => {
+          fetchInternshipDetails(batchNumber, internshipId);
+        });
+      } else {
+        fetchInternshipDetails(batchNumber, internshipId);
+      }
+    }
+  }, [currentView, batchNumber, internshipId, batches.length]);
 
   // Render loading spinner
   const renderLoading = () => (
@@ -198,7 +237,7 @@ const App = () => {
         <button onClick={handleBack} className="back-btn">
           ← Back to Batches
         </button>
-        <h1>Batch {selectedBatch.batchNumber} Internships</h1>
+        <h1>Batch {batchNumber} Internships</h1>
         <p>{internships.length} internships in this batch</p>
       </header>
 
@@ -218,7 +257,7 @@ const App = () => {
               {internship.image && (
                 <div className="card-image">
                   <img
-                    src={`${API_BASE_URL}/batches/${selectedBatch.batchNumber}/internships/${internship._id}/image`}
+                    src={`${API_BASE_URL}/batches/${batchNumber}/internships/${internship._id}/image`}
                     alt={internship.name}
                     onError={(e) => {
                       e.target.style.display = 'none';
@@ -261,7 +300,7 @@ const App = () => {
             {selectedInternship.image && (
               <div className="details-image">
                 <img
-                  src={`${API_BASE_URL}/batches/${selectedBatch.batchNumber}/internships/${selectedInternship._id}/image`}
+                  src={`${API_BASE_URL}/batches/${batchNumber}/internships/${selectedInternship._id}/image`}
                   alt={selectedInternship.name}
                   onError={(e) => {
                     e.target.style.display = 'none';
@@ -294,7 +333,7 @@ const App = () => {
                     </div>
                     <div className="info-item">
                       <label>Batch:</label>
-                      <span>Batch {selectedBatch.batchNumber}</span>
+                      <span>Batch {batchNumber}</span>
                     </div>
                   </div>
                 </div>
@@ -324,7 +363,7 @@ const App = () => {
                   <div className="info-section">
                     <h3>Certificate</h3>
                     <a
-                      href={`${API_BASE_URL}/batches/${selectedBatch.batchNumber}/internships/${selectedInternship._id}/certificate`}
+                      href={`${API_BASE_URL}/batches/${batchNumber}/internships/${selectedInternship._id}/certificate`}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="certificate-link"
@@ -358,3 +397,10 @@ const App = () => {
 };
 
 export default App;
+
+// Add these routes to your main App.js router configuration:
+/*
+<Route path="/internship" element={<Inter />} />
+<Route path="/internship/batch/:batchNumber" element={<Inter />} />
+<Route path="/internship/batch/:batchNumber/internship/:internshipId" element={<Inter />} />
+*/

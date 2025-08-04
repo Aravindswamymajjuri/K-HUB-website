@@ -513,6 +513,41 @@ router.get('/batches/:batchNumber/stats', async (req, res) => {
       error: error.message
     });
   }
+  router.delete('/batches/:batchNumber/internships/:internshipId', async (req, res) => {
+  try {
+    const { batchNumber, internshipId } = req.params;
+    const batchNum = parseInt(batchNumber);
+
+    const batch = await InternshipBatch.findOne({ batchNumber: batchNum });
+    if (!batch) {
+      return res.status(404).json({ success: false, message: 'Batch not found' });
+    }
+
+    const internship = batch.internships.find(i => i._id.toString() === internshipId);
+    if (!internship) {
+      return res.status(404).json({ success: false, message: 'Internship not found' });
+    }
+
+    // Remove internship manually by filtering the array
+    batch.internships = batch.internships.filter(i => i._id.toString() !== internshipId);
+
+    await batch.save();
+
+    return res.json({
+      success: true,
+      message: 'Internship deleted successfully',
+      data: internship
+    });
+  } catch (error) {
+    console.error('Delete internship error:', error);
+    return res.status(500).json({
+      success: false,
+      message: 'Error deleting internship',
+      error: error.message
+    });
+  }
+});
+
 });
 
 module.exports = router;
