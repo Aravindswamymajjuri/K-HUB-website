@@ -27,24 +27,34 @@ const ViewHackathon = () => {
   };
 
   return (
-    <div>
+    <div className="viewhackathon-body">
       <h3>.</h3>
-      <h1 className='heading'>Hackathons</h1>
+      <h1 className="heading">Hackathons</h1>
       <div className="hackathon-list">
         {selectedHackathon ? (
-          <FullHackathon hackathon={selectedHackathon} onBack={() => setSelectedHackathon(null)} />
+          <FullHackathon
+            hackathon={selectedHackathon}
+            onBack={() => setSelectedHackathon(null)}
+          />
+        ) : hackathons.length > 0 ? (
+          hackathons.map((hackathon) => (
+            <div
+              key={hackathon._id}
+              className="hackathon-card"
+              onClick={() => handleCardClick(hackathon)}
+            >
+              <h2>{hackathon.name}</h2>
+              <p>
+                <strong>Date:</strong>{' '}
+                {new Date(hackathon.date).toLocaleDateString()}
+              </p>
+              <p>
+                <strong>Technology:</strong> {hackathon.technology}
+              </p>
+            </div>
+          ))
         ) : (
-          hackathons.length > 0 ? (
-            hackathons.map((hackathon) => (
-              <div key={hackathon._id} className="hackathon-card" onClick={() => handleCardClick(hackathon)}>
-                <h2>{hackathon.name}</h2>
-                <p><strong>Date:</strong> {new Date(hackathon.date).toLocaleDateString()}</p>
-                <p><strong>Technology:</strong> {hackathon.technology}</p>
-              </div>
-            ))
-          ) : (
-            <p>No hackathons found.</p>
-          )
+          <p>No hackathons found.</p>
         )}
       </div>
     </div>

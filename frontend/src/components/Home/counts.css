@@ -1,28 +1,54 @@
+/* counts.css */
+
 .counts-container {
   display: flex;
-  justify-content: space-around; /* Horizontal layout for desktop */
-  width: 100%; /* Full width container */
-  background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent black background */
-   /* Strong blur effect */
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 30px;
+  padding: 60px 20px;
+  background: linear-gradient(to right, #f4f6f9, #eef1f6);
 }
 
 .count-card {
+  background-color: #ffffff;
+  padding: 30px 40px;
+  border-radius: 20px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
   text-align: center;
-  padding: 20px;
-  background-color: transparent; /* Fully transparent background */
-  border-radius: 8px;
-  margin: 10px;
-  flex: 1; /* Each card takes equal space */
+  transition: transform 0.3s ease;
+  min-width: 200px;
 }
 
-.count-card h2 {
-  color: white; /* Set text color to white */
-  font-weight: bold; /* Make text bold */
+.count-card:hover {
+  transform: scale(1.05);
 }
 
+.count-card h2:first-child {
+  font-size: 1.4rem;
+  color: #00796b;
+  font-weight: 600;
+  letter-spacing: 1px;
+  margin-bottom: 10px;
+}
+
+.count-card h2:last-child {
+  font-size: 2rem;
+  font-weight: bold;
+  color: #004d40;
+}
+
+/* Responsive */
 @media (max-width: 768px) {
-  .counts-container {
-    flex-direction: column; /* Vertical layout for mobile */
-    align-items: center;
+  .count-card {
+    padding: 20px 25px;
+    min-width: 150px;
+  }
+
+  .count-card h2:first-child {
+    font-size: 1.1rem;
+  }
+
+  .count-card h2:last-child {
+    font-size: 1.6rem;
   }
 }

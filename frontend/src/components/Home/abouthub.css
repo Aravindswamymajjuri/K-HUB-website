@@ -1,152 +1,92 @@
-/* About Us Page */
 .about-us {
-  display: flex;
-  flex-direction: row-reverse;
-  align-items: flex-start;
-  padding: 0px;
-  background-color: white;
-}
-
-.image-previeww{
-  flex: 1;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  padding: 20px;
+  background: #f6f9fc;
+  padding: 4rem 2rem;
+  font-family: 'Inter', sans-serif;
+  color: #1a1a1a;
 }
 
-.image-previeww img {
-  width: 100%; /* Adjust width to fill available space */
-  height: 100%; /* Adjust height to fill available space */
-  object-fit: contain; /* Maintain aspect ratio */
-  border-radius: 10px;
+.image-previeww {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 3rem;
 }
 
 .collaboration {
   display: flex;
-  flex-direction: column;
   align-items: center;
-  justify-content: center;
-  width: 90%; /* Adjust width to fill available space */
+  gap: 1.5rem;
 }
 
 .collaboration img {
-  width: 90%; /* Adjust width to fill available space */
-  height: 100%; /* Adjust height to fill available space */
-  object-fit: contain; /* Maintain aspect ratio */
-  border-radius: 10px;
+  height: 80px;
+  width: auto;
+  object-fit: contain;
+  filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.1));
+  transition: transform 0.3s ease;
+}
+
+.collaboration img:hover {
+  transform: scale(1.05);
 }
 
 .link-icon {
-  font-size: 2rem; /* Adjust the size of the icon */
-  margin: 10px 0; /* Adjust the margin to create space between the icon and images */
-  color: #007bff; /* Adjust the color of the icon */
+  font-size: 24px;
+  color: #5e60ce;
 }
 
 .text-content {
-  flex: 1;
-  padding: 20px;
-  color: black; /* Set text color to black */
-  text-align: justify; /* Align text to justify */
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-}
-
-.text-content p {
-  width: 100%; /* Adjust width to fill available space */
-  height: auto; /* Adjust height to fill available space */
+  max-width: 900px;
+  text-align: center;
+  line-height: 1.8;
 }
 
 .text-content h2 {
-  cursor: pointer;
-  transition: color 0.3s;
-  color: black; /* Set heading color to black */
+  font-size: 1.8rem;
+  color: #5e60ce;
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+  font-weight: 700;
 }
 
-.text-content h2:hover {
-  color: #007bff; /* Change the color on hover */
+.text-content p {
+  font-size: 1.05rem;
+  margin-bottom: 1rem;
+  color: #333;
 }
 
-@media (max-width: 768px) {
-  .about-us {
-    flex-direction: column;
-  }
-
-  .image-preview,
-  .text-content {
-    
-    text-align: center;
-  }
-
-  .image-preview img,
-  .collaboration img {
-    width: 100%; /* Ensure images take full width in smaller screens */
-    height: auto; /* Maintain aspect ratio */
-    max-height: 200px; /* Limit maximum height on smaller screens */
-  }
-
-  .text-content {
-    text-align: center;
-  }
-
-  .text-content p {
-    width: 100%; /* Ensure text area takes full width in smaller screens */
-  }
-}
-
-.about-hub {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 20px;
-}
-
-.about-hub-section {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin: 20px 0;
-  width: 100%;
-  max-width: 1200px;
-}
-
-.about-hub-section.reverse {
-  flex-direction: row-reverse;
-}
-
-.about-hub-content {
-  flex: 1;
-  padding: 20px;
+.text-content ol {
   text-align: left;
+  margin: 1rem auto;
+  padding-left: 1.5rem;
+  max-width: 700px;
 }
 
-.about-hub-image {
-  flex: 1;
-  padding: 20px;
+.text-content li {
+  margin-bottom: 0.5rem;
+  font-size: 1.05rem;
+  color: #444;
 }
 
-.about-hub-image img {
-  width: 100%;
-  height: auto;
-  border-radius: 20px;
-  width: 400px;
-  height: 200px;
-}
-
+/* Responsive */
 @media (max-width: 768px) {
-  .about-hub-section {
+  .collaboration {
     flex-direction: column;
   }
 
-  .about-hub-section.reverse {
-    flex-direction: column;
+  .text-content {
+    text-align: left;
+    padding: 0 1rem;
   }
 
-  .about-hub-content,
-  .about-hub-image {
-    padding: 10px;
+  .text-content h2 {
+    font-size: 1.5rem;
+  }
+
+  .text-content p, .text-content li {
+    font-size: 1rem;
   }
 }

@@ -5,6 +5,7 @@ const router = express.Router();
 
 router.post('/login', (req, res) => {
   try {
+    console.log('Received login request:', req.body); // Log the request body for debugging
     loginAdmin(req, res);
   } catch (error) {
     console.error('Error in /login route:', error.message); // Include detailed error message

@@ -1,0 +1,70 @@
+/* Center the slideshow with a nice card-like appearance */
+.slide-content {
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.15);
+  padding: 32px 24px;
+  text-align: center;
+  margin: 20px 0;
+  min-height: 400px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.slide-content img {
+  max-width: 80%;
+  max-height: 240px;
+  border-radius: 12px;
+  margin-bottom: 18px;
+  object-fit: cover;
+  background: #f0f0f0;
+}
+
+.slide-content h2 {
+  color: #104080;
+  font-size: 2rem;
+  margin-bottom: 8px;
+}
+
+.slide-content h3,
+.slide-content h4 {
+  color: #264653;
+}
+
+.slide-content p {
+  color: #31425b;
+  font-size: 1.08rem;
+  margin: 18px 0 0 0;
+  line-height: 1.55;
+}
+
+/* Slick carousel dots and buttons custom styling (optional) */
+.slick-dots li button:before {
+  color: #104080;
+}
+.slick-dots li.slick-active button:before {
+  color: #e76f51;
+}
+
+/* Optional: add some breathing room on mobile */
+@media (max-width: 600px) {
+  .slide-content {
+    padding: 18px 6px;
+    min-height: 300px;
+  }
+  .slide-content img {
+    max-width: 100%;
+    max-height: 160px;
+  }
+  .slide-content h2 {
+    font-size: 1.3rem;
+  }
+}
+
+/* Optional: Smooth card shadow lift on hover */
+.slide-content:hover {
+  box-shadow: 0 10px 38px rgba(74, 31, 85, 0.18);
+  transition: box-shadow 0.2s;
+}

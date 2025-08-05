@@ -1,19 +1,50 @@
-.home {
-  background-image: url('we.jpg'); /* Replace with your image path */
-  background-size: cover; /* Cover the entire background */
-  background-position: center; /* Center the background image */
-  background-attachment: fixed; /* Fixed background */
-  background-color: rgba(0, 0, 0, 0.5); /* Optional overlay to enhance readability */
-  color: white; /* Text color */
-  min-height: 100vh; /* Full height of the viewport */
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-  padding: 0px;
-  box-sizing: border-box; /* Ensure padding is included in height calculations */
-  backdrop-filter: blur(10px); /* Blur effect for the background */
+/* =====  Global  ===== */
+html {
+  scroll-behavior: smooth;               /* smooth in-page links */
+}
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
-/* Heading Styles */
+/* =====  Section  ===== */
+.home {
+  background: #ffffff;                   /* pure white */
+  /* if you’d like a faint top-to-bottom tint, uncomment the next line */
+  /* background: linear-gradient(180deg, #ffffff 0%, #f7f7f9 100%); */
+  min-height: 100vh;
+  position: relative;
+  overflow: hidden;
+}
+
+/* faint, classy vignette dots */
+.home::before {
+  content: '';
+  position: absolute;
+  inset: 0;                              /* shorthand for top/right/bottom/left: 0 */
+  background:
+    radial-gradient(circle at 15% 15%, rgba(0, 0, 0, 0.04) 0%, transparent 40%),
+    radial-gradient(circle at 85% 85%, rgba(0, 0, 0, 0.04) 0%, transparent 40%);
+  pointer-events: none;                  /* keeps overlay non-interactive */
+}
+
+.home > * {
+  position: relative;                    /* lifts content above overlay */
+  z-index: 1;
+}
+
+/* =====  Custom Scrollbar  (WebKit-based browsers) ===== */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #f1f1f1;                   /* light grey track */
+}
+::-webkit-scrollbar-thumb {
+  background: #c9c9c9;                   /* medium grey thumb */
+  border-radius: 10px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #a8a8a8;                   /* darker on hover */
+}

@@ -4,6 +4,7 @@ import Support from './support';
 import Counts from './counts';  
 import './home.css';
 import Slides from '../slides/slides';
+import SlideShow from './SlideShow';
 
 
 const Home = () => {
@@ -13,7 +14,7 @@ const Home = () => {
     <div className="home">
      
       <AboutUs />
-    <Slides/>
+    <SlideShow />
       <Support />
       <Counts/>
     </div>

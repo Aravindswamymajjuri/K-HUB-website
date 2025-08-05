@@ -4,7 +4,7 @@ const nodemailer = require('nodemailer');
 const adminCredentials = {
   'aravindswamymajjuri143@gmail.com': 'aravindswamymajjuri143@gmail.com',
   'kadaripavani1@gmail.com': 'kadaripavani1@gmail.com',
-  'veerendrarevu@gmail.com0' : 'veerendrarevu@gmail.com'
+  'veerendrarevu@gmail.com' : 'veerendrarevu@gmail.com'
 };
 
 let generatedOtps = {}; // Stores OTP per admin email
@@ -16,6 +16,9 @@ const transporter = nodemailer.createTransport({
     user: 'aravindswamymajjuri143@gmail.com', // SMTP sender
     pass: 'zpyceoncvjjojvht',
   },
+  tls: {
+    rejectUnauthorized: false // <-- allows self-signed certs
+  }
 });
 
 // Generate 6-digit OTP
@@ -33,7 +36,7 @@ const loginAdmin = (req, res) => {
     generatedOtps[email] = otp; // Store OTP per email
 
     const mailOptions = {
-      from: 'pavankolli7532@gmail.com',
+      from: 'aravindswamymajjuri143@gmail.com', // <-- Match transporter user
       to: email,
       subject: 'Your OTP Code',
       text: `Your OTP code is ${otp}`,
@@ -41,6 +44,7 @@ const loginAdmin = (req, res) => {
 
     transporter.sendMail(mailOptions, (error, info) => {
       if (error) {
+        console.error('Error sending OTP:', error);
         return res.status(500).send('Error sending OTP');
       } else {
         return res.status(200).send({ success: true });
