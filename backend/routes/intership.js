@@ -78,7 +78,7 @@ router.get('/batches/:batchNumber', async (req, res) => {
   try {
     const { batchNumber } = req.params;
     
-    const batch = await InternshipBatch.findOne({ batchNumber: parseInt(batchNumber) });
+    const batch = await InternshipBatch.findOne({ batchNumber });
     
     if (!batch) {
       return res.status(404).json({
@@ -100,17 +100,17 @@ router.get('/batches/:batchNumber', async (req, res) => {
   }
 });
 
-// UPDATE - Update batch (batch number cannot be changed due to unique constraint)
+// UPDATE - Update batch (batch number cannot be changed)
 router.put('/batches/:batchNumber', async (req, res) => {
   try {
     const { batchNumber } = req.params;
     const updateData = { ...req.body };
     
-    // Remove batchNumber from update data to prevent modification
+    // Prevent batchNumber modifications
     delete updateData.batchNumber;
     
     const updatedBatch = await InternshipBatch.findOneAndUpdate(
-      { batchNumber: parseInt(batchNumber) },
+      { batchNumber },
       updateData,
       { new: true, runValidators: true }
     );
@@ -142,7 +142,7 @@ router.delete('/batches/:batchNumber', async (req, res) => {
     const { batchNumber } = req.params;
     
     const deletedBatch = await InternshipBatch.findOneAndDelete({
-      batchNumber: parseInt(batchNumber)
+      batchNumber
     });
     
     if (!deletedBatch) {
@@ -222,7 +222,7 @@ router.post(
       };
 
       const batch = await InternshipBatch.findOneAndUpdate(
-        { batchNumber: parseInt(batchNumber) },
+        { batchNumber },
         { $push: { internships: internshipData } },
         { new: true, runValidators: true }
       );
@@ -257,7 +257,7 @@ router.get('/batches/:batchNumber/internships', async (req, res) => {
     const { batchNumber } = req.params;
     const { page = 1, limit = 10 } = req.query;
     
-    const batch = await InternshipBatch.findOne({ batchNumber: parseInt(batchNumber) });
+    const batch = await InternshipBatch.findOne({ batchNumber });
     
     if (!batch) {
       return res.status(404).json({
@@ -295,7 +295,7 @@ router.get('/batches/:batchNumber/internships/:internshipId', async (req, res) =
   try {
     const { batchNumber, internshipId } = req.params;
     
-    const batch = await InternshipBatch.findOne({ batchNumber: parseInt(batchNumber) });
+    const batch = await InternshipBatch.findOne({ batchNumber });
     
     if (!batch) {
       return res.status(404).json({
@@ -358,7 +358,7 @@ router.put(
         };
       }
 
-      const batch = await InternshipBatch.findOne({ batchNumber: parseInt(batchNumber) });
+      const batch = await InternshipBatch.findOne({ batchNumber });
       if (!batch) {
         return res.status(404).json({
           success: false,
@@ -399,7 +399,7 @@ router.put(
 router.get('/batches/:batchNumber/internships/:internshipId/image', async (req, res) => {
   try {
     const { batchNumber, internshipId } = req.params;
-    const batch = await InternshipBatch.findOne({ batchNumber: parseInt(batchNumber) });
+    const batch = await InternshipBatch.findOne({ batchNumber });
     if (!batch) return res.status(404).json({ success: false, message: 'Batch not found' });
     const internship = batch.internships.id(internshipId);
     if (!internship || !internship.image || !internship.image.data) {
@@ -416,7 +416,7 @@ router.get('/batches/:batchNumber/internships/:internshipId/image', async (req, 
 router.get('/batches/:batchNumber/internships/:internshipId/certificate', async (req, res) => {
   try {
     const { batchNumber, internshipId } = req.params;
-    const batch = await InternshipBatch.findOne({ batchNumber: parseInt(batchNumber) });
+    const batch = await InternshipBatch.findOne({ batchNumber });
     if (!batch) return res.status(404).json({ success: false, message: 'Batch not found' });
     const internship = batch.internships.id(internshipId);
     if (!internship || !internship.certificate || !internship.certificate.data) {
@@ -427,6 +427,46 @@ router.get('/batches/:batchNumber/internships/:internshipId/certificate', async 
     res.send(internship.certificate.data);
   } catch (error) {
     res.status(500).json({ success: false, message: 'Error retrieving certificate', error: error.message });
+  }
+});
+
+// DELETE - Delete specific internship (MOVED outside any other route handlers)
+router.delete('/batches/:batchNumber/internships/:internshipId', async (req, res) => {
+  try {
+    const { batchNumber, internshipId } = req.params;
+
+    const batch = await InternshipBatch.findOne({ batchNumber });
+    if (!batch) {
+      return res.status(404).json({ success: false, message: 'Batch not found' });
+    }
+
+    const internship = batch.internships.id(internshipId);
+    if (!internship) {
+      return res.status(404).json({ success: false, message: 'Internship not found' });
+    }
+
+    // Remove the internship subdocument
+    // For Mongoose >= 5.6, use deleteOne; fallback to filter for older versions
+    if (typeof internship.deleteOne === 'function') {
+      internship.deleteOne();
+    } else {
+      batch.internships = batch.internships.filter(i => i._id.toString() !== internshipId);
+    }
+
+    await batch.save();
+
+    res.json({
+      success: true,
+      message: 'Internship deleted successfully',
+      data: internship
+    });
+  } catch (error) {
+    console.error('Delete internship error:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Error deleting internship',
+      error: error.message
+    });
   }
 });
 
@@ -442,7 +482,7 @@ router.get('/search/internships', async (req, res) => {
     let matchConditions = {};
     
     if (batchNumber) {
-      matchConditions.batchNumber = parseInt(batchNumber);
+      matchConditions.batchNumber = batchNumber; // no parseInt
     }
     
     let internshipMatch = {};
@@ -483,7 +523,7 @@ router.get('/batches/:batchNumber/stats', async (req, res) => {
   try {
     const { batchNumber } = req.params;
     
-    const batch = await InternshipBatch.findOne({ batchNumber: parseInt(batchNumber) });
+    const batch = await InternshipBatch.findOne({ batchNumber });
     
     if (!batch) {
       return res.status(404).json({
@@ -499,7 +539,7 @@ router.get('/batches/:batchNumber/stats', async (req, res) => {
       internshipsWithCertificates: batch.internships.filter(i => i.certificate && i.certificate.data).length,
       uniqueInternshipTitles: [...new Set(batch.internships.map(i => i.internshipTitle))].length,
       createdAt: batch.createdAt,
-      lastUpdated: Math.max(...batch.internships.map(i => new Date(i.updatedAt)))
+      lastUpdated: batch.internships.length === 0 ? batch.createdAt : new Date(Math.max(...batch.internships.map(i => new Date(i.updatedAt).getTime())))
     };
     
     res.json({
@@ -513,41 +553,6 @@ router.get('/batches/:batchNumber/stats', async (req, res) => {
       error: error.message
     });
   }
-  router.delete('/batches/:batchNumber/internships/:internshipId', async (req, res) => {
-  try {
-    const { batchNumber, internshipId } = req.params;
-    const batchNum = parseInt(batchNumber);
-
-    const batch = await InternshipBatch.findOne({ batchNumber: batchNum });
-    if (!batch) {
-      return res.status(404).json({ success: false, message: 'Batch not found' });
-    }
-
-    const internship = batch.internships.find(i => i._id.toString() === internshipId);
-    if (!internship) {
-      return res.status(404).json({ success: false, message: 'Internship not found' });
-    }
-
-    // Remove internship manually by filtering the array
-    batch.internships = batch.internships.filter(i => i._id.toString() !== internshipId);
-
-    await batch.save();
-
-    return res.json({
-      success: true,
-      message: 'Internship deleted successfully',
-      data: internship
-    });
-  } catch (error) {
-    console.error('Delete internship error:', error);
-    return res.status(500).json({
-      success: false,
-      message: 'Error deleting internship',
-      error: error.message
-    });
-  }
-});
-
 });
 
 module.exports = router;

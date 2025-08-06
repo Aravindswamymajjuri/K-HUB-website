@@ -16,25 +16,25 @@ import ViewProjects from './components/Projects/viewproject';
 import Contact from './components/Contact/contact';
 import Login from './components/Login/adminlogin';
 import AdminPage from './components/Adminpage/adminpage'; 
-import AddHackathon from './components/admin/addhackathon'
-import ManageBatch from './components/admin/managebatch'
-import AddBatch from './components/admin/addbatch'
-import AddEvent from './components/admin/addevents'
-import AddTeam from './components/admin/addteam'
-import AddMember from './components/admin/addmember'
-import ManageEvent from './components/admin/manageevent'
+import AddHackathon from './components/admin/addhackathon';
+import ManageBatch from './components/admin/managebatch';
+import AddBatch from './components/admin/addbatch';
+import AddEvent from './components/admin/addevents';
+import AddTeam from './components/admin/addteam';
+import AddMember from './components/admin/addmember';
+import ManageEvent from './components/admin/manageevent';
 import ManageHackathon from './components/admin/managehackathon';
 import AddAchievement from './components/admin/addachivements';
 import ViewAchievement from './components/achivements/viewachivements';
 import ManageAchievement from './components/admin/manageachivements';
 import AddNews from './components/admin/addnews';
 import ViewNews from './components/news/viewnews';
-import FullNews from './components/news/fullnews'
+import FullNews from './components/news/fullnews';
 import ManageNews from './components/admin/managenews';
 import ViewHackathon from './components/hackathons/viewhackathon';
 import { useAuth } from './components/Adminpage/auth';
-import AddPoster from './components/slides/poster'
-import LatestAchievement from './components/slides/latestachivement'
+import AddPoster from './components/slides/poster';
+import LatestAchievement from './components/slides/latestachivement';
 import './App.css';
 import Footer from './components/Home/Footer';
 import ProjectList from './components/projectlink/projectlink';
@@ -44,6 +44,7 @@ import Inter from './components/Intership/internship';
 
 const App = () => {
   const isAuthenticated = useAuth();
+
   return (
     <Router>
       <div>
@@ -60,12 +61,12 @@ const App = () => {
           <Route path="/mentors/:batchNumber" element={<MentorView />} />
           <Route path="/contactus" element={<Contact />} />
           <Route path="/login" element={<Login />} />
-          <Route path="/viewproject" element={<ViewProjects/>} />
-          <Route path="/viewachivements" element={<ViewAchievement/>} />
-          <Route path="/latestachivements" element={<LatestAchievement/>} />
-          <Route path="/news" element={<ViewNews/>} />
-          <Route path="/news/:id" element={<FullNews/>} />
-          <Route path="/viewhackathon" element={<ViewHackathon/>} />
+          <Route path="/viewproject" element={<ViewProjects />} />
+          <Route path="/viewachivements" element={<ViewAchievement />} />
+          <Route path="/latestachivements" element={<LatestAchievement />} />
+          <Route path="/news" element={<ViewNews />} />
+          <Route path="/news/:id" element={<FullNews />} />
+          <Route path="/viewhackathon" element={<ViewHackathon />} />
 
           <Route path="/admin" element={isAuthenticated ? <AdminPage /> : <Navigate to="/login" />} />
           <Route path="/managebatch" element={<ManageBatch />} />
@@ -87,11 +88,11 @@ const App = () => {
           <Route path="/manageachivements" element={isAuthenticated ? <ManageAchievement /> : <Navigate to="/login" />} />
 
           {/* hackathon routes */}
-          <Route path="/managehackathon" element={isAuthenticated ? <ManageHackathon /> : <Navigate to="/login" />}/>
+          <Route path="/managehackathon" element={isAuthenticated ? <ManageHackathon /> : <Navigate to="/login" />} />
           <Route path="/addhackathon" element={isAuthenticated ? <AddHackathon /> : <Navigate to="/login" />} />
 
           {/* project routes */}
-          <Route path="/addproject" element={isAuthenticated ? <AddProject/> : <Navigate to="/login" />}/>
+          <Route path="/addproject" element={isAuthenticated ? <AddProject /> : <Navigate to="/login" />} />
           <Route path="/manageproject" element={isAuthenticated ? <ManageProjects /> : <Navigate to="/login" />} />
           
           {/* Updated project showcase routes with parameters */}

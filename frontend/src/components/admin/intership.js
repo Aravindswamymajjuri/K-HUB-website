@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import './intership.css';
 import { Search, Plus, Edit2, Trash2, Users, Award, Calendar, BarChart3, X, ArrowLeft } from 'lucide-react';
 
+
 // API Configuration
 const API_BASE_URL = 'http://localhost:5000/api/interships';
 
@@ -291,9 +292,11 @@ export default function InternshipManager() {
     try {
       let response;
       if (editingBatch) {
+        // send batchNumber as string
         response = await api.updateBatch(editingBatch.batchNumber, batchForm);
       } else {
-        response = await api.createBatch({ batchNumber: parseInt(batchForm.batchNumber) });
+        // send batchNumber as string, no parseInt
+        response = await api.createBatch({ batchNumber: batchForm.batchNumber });
       }
       if (response.success) {
         await fetchBatches();
@@ -506,7 +509,7 @@ export default function InternshipManager() {
                 {batches.map((batch) => (
                   <div
                     key={batch._id}
-                    className={`batch-list-item ${batchNumber == batch.batchNumber ? 'selected' : ''}`}
+                    className={`batch-list-item ${batchNumber === batch.batchNumber ? 'selected' : ''}`}
                   >
                     <div className="batch-item-main" onClick={() => handleBatchSelect(batch.batchNumber)}>
                       <h3 className="batch-title">Batch {batch.batchNumber}</h3>
@@ -550,8 +553,8 @@ export default function InternshipManager() {
                   className="input-field"
                 />
                 <input
-                  type="number"
-                  placeholder="Batch number"
+                  type="text"
+                  placeholder="Batch number (e.g. 2024-2025)"
                   value={searchForm.batchNumber}
                   onChange={e => setSearchForm(prev => ({ ...prev, batchNumber: e.target.value }))}
                   className="input-field"
@@ -726,21 +729,26 @@ export default function InternshipManager() {
 
         {/* Batch Modal */}
         {showBatchModal && (
-          <div className="modal-overlay">
+          <div className="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="batchModalTitle">
             <div className="modal-box">
-              <h2 className="modal-title">{editingBatch ? 'Edit Batch' : 'Create New Batch'}</h2>
+              <h2 id="batchModalTitle" className="modal-title">{editingBatch ? 'Edit Batch' : 'Create New Batch'}</h2>
               <form onSubmit={handleBatchSubmit} className="form">
                 <div className="form-group">
                   <label htmlFor="batchNumber" className="form-label">Batch Number</label>
                   <input
                     id="batchNumber"
-                    type="number"
+                    type="text"
+                    pattern="^\d{4}-\d{4}$"
+                    placeholder="e.g. 2024-2025"
                     value={batchForm.batchNumber}
                     onChange={(e) => setBatchForm(prev => ({ ...prev, batchNumber: e.target.value }))}
                     className="input-field"
                     required
                     disabled={!!editingBatch}
+                    title="Format: YYYY-YYYY (e.g. 2024-2025)"
+                    aria-describedby="batchNumberHint"
                   />
+                  <small id="batchNumberHint" className="hint">Format: YYYY-YYYY (e.g. 2024-2025)</small>
                 </div>
                 <div className="form-actions">
                   <button type="submit" disabled={loading} className="btn-primary">
@@ -757,9 +765,9 @@ export default function InternshipManager() {
 
         {/* Internship Modal */}
         {showInternshipModal && (
-          <div className="modal-overlay">
+          <div className="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="internshipModalTitle">
             <div className="modal-box modal-large">
-              <h2 className="modal-title">{editingInternship ? 'Edit Internship' : 'Add New Internship'}</h2>
+              <h2 id="internshipModalTitle" className="modal-title">{editingInternship ? 'Edit Internship' : 'Add New Internship'}</h2>
               <form onSubmit={handleInternshipSubmit} className="form internship-form">
                 <div className="field-row">
                   <div className="form-group">
@@ -871,7 +879,7 @@ export default function InternshipManager() {
 
         {/* Internship Detail Modal */}
         {showInternshipDetail && detailInternship && (
-          <div className="modal-overlay">
+          <div className="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="internshipDetailTitle">
             <div className="modal-box">
               <button
                 className="modal-close"
@@ -880,7 +888,7 @@ export default function InternshipManager() {
               >
                 <X />
               </button>
-              <h2 className="modal-title">{detailInternship.name}</h2>
+              <h2 id="internshipDetailTitle" className="modal-title">{detailInternship.name}</h2>
               <p><strong>Roll No:</strong> {detailInternship.rollNo}</p>
               <p><strong>Internship Title:</strong> {detailInternship.internshipTitle}</p>
               {detailInternship.company && <p><strong>Company:</strong> {detailInternship.company}</p>}

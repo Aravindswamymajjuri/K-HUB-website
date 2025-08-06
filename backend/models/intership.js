@@ -30,8 +30,8 @@ const internshipSchema = new mongoose.Schema({
   },
   image: {
     data: {
-      type: Buffer, // Store as binary buffer
-       required: true // <-- REMOVE required if you want to allow optional uploads
+      type: Buffer // Store as binary buffer
+      // required: true // Remove required if you want optional uploads
     },
     originalName: String,
     mimetype: String,
@@ -39,8 +39,8 @@ const internshipSchema = new mongoose.Schema({
   },
   certificate: {
     data: {
-      type: Buffer, // Store as binary buffer
-        required: true // <-- REMOVE required if you want to allow optional uploads
+      type: Buffer // Store as binary buffer
+      // required: true // Remove required if you want optional uploads
     },
     originalName: String,
     mimetype: String,
@@ -58,10 +58,11 @@ const internshipSchema = new mongoose.Schema({
 
 const batchSchema = new mongoose.Schema({
   batchNumber: {
-    type: Number,
+    type: String,              // Changed from Number to String
     required: true,
     unique: true,
-    index: true
+    index: true,
+    match: /^\d{4}-\d{4}$/     // Validates format like "2024-2025"
   },
   internships: [internshipSchema],
   createdAt: {
