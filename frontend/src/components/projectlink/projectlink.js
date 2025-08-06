@@ -23,21 +23,26 @@ const ProjectShowcase = () => {
       const data = await response.json();
       if (data.success) {
         setBatches(data.data);
-        
-        // If we have URL parameters, set the appropriate states
+
         if (batchNumber && data.data.length > 0) {
-          const batch = data.data.find(b => b.batchNumber === parseInt(batchNumber));
+          // batchNumber is a string, compare directly
+          const batch = data.data.find(b => b.batchNumber === batchNumber);
           if (batch) {
             setSelectedBatch(batch);
-            
-            // If we also have a team number, select the team
+
+            // teamNumber may be numeric; parseInt if your data uses number
             if (teamNumber && batch.teams) {
-              const team = batch.teams.find(t => t.teamNumber === parseInt(teamNumber));
+              const teamNum = isNaN(Number(teamNumber)) ? teamNumber : Number(teamNumber);
+              const team = batch.teams.find(t => t.teamNumber === teamNum);
               if (team) {
                 setSelectedProject({ ...team, batchNumber: batch.batchNumber });
               }
             }
           }
+        } else {
+          // Clear selections if URL params missing
+          setSelectedBatch(null);
+          setSelectedProject(null);
         }
       }
     } catch (error) {
@@ -51,7 +56,7 @@ const ProjectShowcase = () => {
     fetchBatches();
   }, [batchNumber, teamNumber]);
 
-  // Handle navigation with URL updates
+  // Navigation updates URL and local state
   const handleBatchSelect = (batch) => {
     setSelectedBatch(batch);
     setSelectedProject(null);
@@ -155,13 +160,13 @@ const ProjectShowcase = () => {
     return (
       <div className="showcase-container">
         <header className="showcase-header">
-          <button className="back-button" style={{marginBottom: 16}} onClick={handleBackToBatches}>
+          <button className="back-button" style={{ marginBottom: 16 }} onClick={handleBackToBatches}>
             <ArrowLeft size={20} /> All Batches
           </button>
-          <h2 className="batch-title" style={{marginTop: 18}}>
+          <h2 className="batch-title" style={{ marginTop: 18 }}>
             <span className="batch-number">Batch {selectedBatch.batchNumber}</span>
             <span className="team-count">
-              <Users size={16}/>
+              <Users size={16} />
               {selectedBatch.teams?.length || 0} Projects
             </span>
           </h2>
@@ -177,7 +182,7 @@ const ProjectShowcase = () => {
                 >
                   {/* Card image */}
                   <div className="card-image-container">
-                    <img 
+                    <img
                       src={`${API_BASE_URL}/batches/${selectedBatch.batchNumber}/teams/${team.teamNumber}/image`}
                       alt={team.title}
                       className="card-image"
@@ -199,8 +204,8 @@ const ProjectShowcase = () => {
                     </div>
                     <h3 className="card-title">{team.title}</h3>
                     <p className="card-description">
-                      {team.description && team.description.length > 120 
-                        ? `${team.description.substring(0, 120)}...` 
+                      {team.description && team.description.length > 120
+                        ? `${team.description.substring(0, 120)}...`
                         : team.description || 'No description available'
                       }
                     </p>
@@ -230,7 +235,7 @@ const ProjectShowcase = () => {
           <div className="details-grid">
             <div className="details-image-section">
               <div className="details-image-container">
-                <img 
+                <img
                   src={`${API_BASE_URL}/batches/${selectedProject.batchNumber}/teams/${selectedProject.teamNumber}/image`}
                   alt={selectedProject.title}
                   className="details-image"
@@ -240,14 +245,17 @@ const ProjectShowcase = () => {
                 />
                 {/* Show video if exists */}
                 {selectedProject.video && (
-                  <div style={{marginTop: '1rem'}}>
+                  <div style={{ marginTop: '1rem' }}>
                     <video
                       width="400"
                       height="225"
                       controls
-                      style={{borderRadius: 8, background: '#000'}}
+                      style={{ borderRadius: 8, background: '#000' }}
                     >
-                      <source src={`${API_BASE_URL}/batches/${selectedProject.batchNumber}/teams/${selectedProject.teamNumber}/video`} type={selectedProject.video.contentType || 'video/mp4'} />
+                      <source
+                        src={`${API_BASE_URL}/batches/${selectedProject.batchNumber}/teams/${selectedProject.teamNumber}/video`}
+                        type={selectedProject.video.contentType || 'video/mp4'}
+                      />
                       Your browser does not support the video tag.
                     </video>
                   </div>
@@ -266,9 +274,9 @@ const ProjectShowcase = () => {
                 </div>
                 <div className="project-actions">
                   {selectedProject.deploymentLink && (
-                    <a 
-                      href={selectedProject.deploymentLink} 
-                      target="_blank" 
+                    <a
+                      href={selectedProject.deploymentLink}
+                      target="_blank"
                       rel="noopener noreferrer"
                       className="action-button primary"
                     >
@@ -277,9 +285,9 @@ const ProjectShowcase = () => {
                     </a>
                   )}
                   {selectedProject.githubLink && (
-                    <a 
-                      href={selectedProject.githubLink} 
-                      target="_blank" 
+                    <a
+                      href={selectedProject.githubLink}
+                      target="_blank"
                       rel="noopener noreferrer"
                       className="action-button secondary"
                     >
@@ -287,9 +295,9 @@ const ProjectShowcase = () => {
                       <span>Source Code</span>
                     </a>
                   )}
-                  <a 
+                  <a
                     href={`${API_BASE_URL}/batches/${selectedProject.batchNumber}/teams/${selectedProject.teamNumber}/document`}
-                    target="_blank" 
+                    target="_blank"
                     rel="noopener noreferrer"
                     className="action-button outline"
                   >

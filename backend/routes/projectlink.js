@@ -68,8 +68,8 @@ router.post('/batches/:batchNumber/teams',
         });
       }
       
-      // Find the batch
-      const batch = await ProjectBatch.findOne({ batchNumber: parseInt(batchNumber) });
+      // Find the batch by exact string batchNumber
+      const batch = await ProjectBatch.findOne({ batchNumber });
       if (!batch) {
         return res.status(404).json({
           success: false,
@@ -156,7 +156,7 @@ router.get('/batches', async (req, res) => {
 router.get('/batches/:batchNumber', async (req, res) => {
   try {
     const { batchNumber } = req.params;
-    const batch = await ProjectBatch.findOne({ batchNumber: parseInt(batchNumber) })
+    const batch = await ProjectBatch.findOne({ batchNumber })
       .select('-teams.projectImage.data -teams.document.data');
     
     if (!batch) {
@@ -184,7 +184,7 @@ router.get('/batches/:batchNumber', async (req, res) => {
 router.get('/batches/:batchNumber/teams/:teamNumber', async (req, res) => {
   try {
     const { batchNumber, teamNumber } = req.params;
-    const batch = await ProjectBatch.findOne({ batchNumber: parseInt(batchNumber) });
+    const batch = await ProjectBatch.findOne({ batchNumber });
     
     if (!batch) {
       return res.status(404).json({
@@ -232,7 +232,7 @@ router.get('/batches/:batchNumber/teams/:teamNumber', async (req, res) => {
 router.get('/batches/:batchNumber/teams/:teamNumber/image', async (req, res) => {
   try {
     const { batchNumber, teamNumber } = req.params;
-    const batch = await ProjectBatch.findOne({ batchNumber: parseInt(batchNumber) });
+    const batch = await ProjectBatch.findOne({ batchNumber });
     
     if (!batch) {
       return res.status(404).json({ success: false, message: 'Batch not found' });
@@ -258,7 +258,7 @@ router.get('/batches/:batchNumber/teams/:teamNumber/image', async (req, res) => 
 router.get('/batches/:batchNumber/teams/:teamNumber/document', async (req, res) => {
   try {
     const { batchNumber, teamNumber } = req.params;
-    const batch = await ProjectBatch.findOne({ batchNumber: parseInt(batchNumber) });
+    const batch = await ProjectBatch.findOne({ batchNumber });
     
     if (!batch) {
       return res.status(404).json({ success: false, message: 'Batch not found' });
@@ -290,7 +290,7 @@ router.put('/batches/:batchNumber', async (req, res) => {
     const { newBatchNumber } = req.body;
     
     const batch = await ProjectBatch.findOneAndUpdate(
-      { batchNumber: parseInt(batchNumber) },
+      { batchNumber },
       { batchNumber: newBatchNumber },
       { new: true }
     ).select('-teams.projectImage.data -teams.document.data');
@@ -328,7 +328,7 @@ router.put('/batches/:batchNumber/teams/:teamNumber',
       const { batchNumber, teamNumber } = req.params;
       const { title, description, deploymentLink, githubLink } = req.body;
       
-      const batch = await ProjectBatch.findOne({ batchNumber: parseInt(batchNumber) });
+      const batch = await ProjectBatch.findOne({ batchNumber });
       if (!batch) {
         return res.status(404).json({
           success: false,
@@ -398,7 +398,7 @@ router.put('/batches/:batchNumber/teams/:teamNumber',
 router.delete('/batches/:batchNumber', async (req, res) => {
   try {
     const { batchNumber } = req.params;
-    const batch = await ProjectBatch.findOneAndDelete({ batchNumber: parseInt(batchNumber) });
+    const batch = await ProjectBatch.findOneAndDelete({ batchNumber });
     
     if (!batch) {
       return res.status(404).json({
@@ -425,7 +425,7 @@ router.delete('/batches/:batchNumber/teams/:teamNumber', async (req, res) => {
   try {
     const { batchNumber, teamNumber } = req.params;
     
-    const batch = await ProjectBatch.findOne({ batchNumber: parseInt(batchNumber) });
+    const batch = await ProjectBatch.findOne({ batchNumber });
     if (!batch) {
       return res.status(404).json({
         success: false,
@@ -459,11 +459,11 @@ router.delete('/batches/:batchNumber/teams/:teamNumber', async (req, res) => {
   }
 });
 
-// 8. Get project video (with range support)
+// 12. Get project video (with range support)
 router.get('/batches/:batchNumber/teams/:teamNumber/video', async (req, res) => {
   try {
     const { batchNumber, teamNumber } = req.params;
-    const batch = await ProjectBatch.findOne({ batchNumber: parseInt(batchNumber) });
+    const batch = await ProjectBatch.findOne({ batchNumber });
     if (!batch) {
       return res.status(404).json({ success: false, message: 'Batch not found' });
     }

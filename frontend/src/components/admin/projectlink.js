@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Plus, Edit2, Trash2, Eye, Download, Upload, X, Save } from 'lucide-react';
+import { Plus, Edit2, Trash2, Eye, Download, Save, X } from 'lucide-react';
 import { useParams, useNavigate } from 'react-router-dom';
 import '../admin/projectlink.css'; // Adjust path as needed
 
@@ -13,11 +13,11 @@ const ProjectBatchApp = () => {
   const [showAddTeam, setShowAddTeam] = useState(false);
   const [editingTeam, setEditingTeam] = useState(null);
   const [newBatchNumber, setNewBatchNumber] = useState('');
-  const [confirmDialog, setConfirmDialog] = useState({ 
-    show: false, 
-    title: '', 
-    message: '', 
-    onConfirm: null 
+  const [confirmDialog, setConfirmDialog] = useState({
+    show: false,
+    title: '',
+    message: '',
+    onConfirm: null
   });
   const [teamForm, setTeamForm] = useState({
     teamNumber: '',
@@ -56,10 +56,10 @@ const ProjectBatchApp = () => {
       const data = await response.json();
       if (data.success) {
         setBatches(data.data);
-        
-        // If we have a batchNumber parameter, set the selected batch
+
+        // Set selected batch if batchNumber param exists (match as string)
         if (batchNumber && data.data.length > 0) {
-          const batch = data.data.find(b => b.batchNumber === parseInt(batchNumber));
+          const batch = data.data.find(b => b.batchNumber === batchNumber);
           if (batch) {
             setSelectedBatch(batch);
           }
@@ -75,14 +75,14 @@ const ProjectBatchApp = () => {
   // Create new batch
   const createBatch = async () => {
     if (!newBatchNumber) return;
-    
+
     try {
       const response = await fetch(`${API_BASE_URL}/batches`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ batchNumber: parseInt(newBatchNumber) })
+        body: JSON.stringify({ batchNumber: newBatchNumber }) // send string directly
       });
-      
+
       const data = await response.json();
       if (data.success) {
         fetchBatches();
@@ -121,7 +121,7 @@ const ProjectBatchApp = () => {
         method: 'POST',
         body: formData
       });
-      
+
       const data = await response.json();
       if (data.success) {
         fetchBatchDetails(selectedBatch.batchNumber);
@@ -157,7 +157,7 @@ const ProjectBatchApp = () => {
         method: 'PUT',
         body: formData
       });
-      
+
       const data = await response.json();
       if (data.success) {
         fetchBatchDetails(selectedBatch.batchNumber);
@@ -182,7 +182,7 @@ const ProjectBatchApp = () => {
           const response = await fetch(`${API_BASE_URL}/batches/${batchNum}`, {
             method: 'DELETE'
           });
-          
+
           const data = await response.json();
           if (data.success) {
             fetchBatches();
@@ -212,7 +212,7 @@ const ProjectBatchApp = () => {
           const response = await fetch(`${API_BASE_URL}/batches/${selectedBatch.batchNumber}/teams/${teamNumber}`, {
             method: 'DELETE'
           });
-          
+
           const data = await response.json();
           if (data.success) {
             fetchBatchDetails(selectedBatch.batchNumber);
@@ -307,7 +307,7 @@ const ProjectBatchApp = () => {
     <div className="project-batch-container">
       <div className="main-content">
         <h1 className="main-title">Project Batch Management</h1>
-        
+
         <div className="grid-layout">
           {/* Batches List */}
           <div>
@@ -321,7 +321,7 @@ const ProjectBatchApp = () => {
                   <Plus size={16} />
                 </button>
               </div>
-              
+
               {loading ? (
                 <div className="loading-text">Loading...</div>
               ) : (
@@ -462,7 +462,7 @@ const ProjectBatchApp = () => {
                       </div>
                     </div>
                   ))}
-                  
+
                   {(!selectedBatch.teams || selectedBatch.teams.length === 0) && (
                     <div className="no-teams-message">
                       No teams in this batch yet. Add a team to get started!
@@ -495,8 +495,8 @@ const ProjectBatchApp = () => {
               </div>
               <div className="form-container">
                 <input
-                  type="number"
-                  placeholder="Batch Number"
+                  type="text"  // Changed from number to text to allow formats like "2025-2026"
+                  placeholder="Batch Number (e.g. 2025-2026)"
                   value={newBatchNumber}
                   onChange={(e) => setNewBatchNumber(e.target.value)}
                   className="form-input"
