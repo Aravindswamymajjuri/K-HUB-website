@@ -105,7 +105,7 @@ const Navbar = () => {
             <Link to="/aluminibatch" onClick={closeMenu}>Alumni</Link>
             <Link to="/mentorbatch" onClick={closeMenu}>Mentors</Link>
             <Link to="/teams" onClick={closeMenu}>Current Batch</Link>
-            <Link to="/teams/previous" onClick={closeMenu}>Previous Batch</Link>
+            {/* <Link to="/teams/previous" onClick={closeMenu}>Previous Batch</Link> */}
           </div>
         </div>
         <Link to="/projectlink" onClick={closeMenu}><FaUsers className="nav-icon" />Depolyed projects</Link>
