@@ -12,8 +12,8 @@ const Counts = () => {
   useEffect(() => {
     const interval = setInterval(() => {
       setCounts(prevCounts => ({
-        projects: prevCounts.projects < 180 ? prevCounts.projects + 1 : 180,
-        seniors: prevCounts.seniors < 50 ? prevCounts.seniors + 1 : 50,
+        projects: prevCounts.projects < 16 ? prevCounts.projects + 1 : 16,
+        seniors: prevCounts.seniors < 90 ? prevCounts.seniors + 1 : 90,
         juniors: prevCounts.juniors < 40 ? prevCounts.juniors + 1 : 40,
         placedMembers: prevCounts.placedMembers < 30 ? prevCounts.placedMembers + 1 : 30
       }));
