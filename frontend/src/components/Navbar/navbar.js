@@ -8,6 +8,9 @@ const Navbar = () => {
   const [eventsDropdownOpen, setEventsDropdownOpen] = useState(false);
   const [teamDropdownOpen, setTeamDropdownOpen] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
+  const [achievementsDropdownOpen, setAchievementsDropdownOpen] = useState(false);
+const toggleAchievementsDropdown = () => setAchievementsDropdownOpen(!achievementsDropdownOpen);
+
 
   // Check if user is admin on component mount
   useEffect(() => {
@@ -94,7 +97,16 @@ const Navbar = () => {
         </div>
 
         <Link to="/viewproject" onClick={closeMenu}><FaProjectDiagram className="nav-icon" />Projects</Link>
-        <Link to="/viewachivements" onClick={closeMenu}><FaTrophy className="nav-icon" />Achievements</Link>
+        {/* <Link to="/viewachivements" onClick={closeMenu}><FaTrophy className="nav-icon" />Achievements</Link> */}
+        <div className="dropdown" onMouseEnter={toggleAchievementsDropdown} onMouseLeave={toggleAchievementsDropdown}>
+  <div className="nav-link">
+    <FaTrophy className="nav-icon" /> <span className="nav-text">Achievements</span>
+  </div>
+  <div className={`dropdown-content ${achievementsDropdownOpen ? 'show' : ''}`}>
+    <Link to="/internship" onClick={closeMenu}>Internships</Link>
+    <Link to="/viewachivements" onClick={closeMenu}>Others</Link>
+  </div>
+</div>
 
         <div className="dropdown" onMouseEnter={toggleTeamDropdown} onMouseLeave={toggleTeamDropdown}>
           <div className="nav-link">
@@ -109,7 +121,7 @@ const Navbar = () => {
           </div>
         </div>
         <Link to="/projectlink" onClick={closeMenu}><FaUsers className="nav-icon" />Depolyed projects</Link>
-        <Link to="/internship" onClick={closeMenu}><FaUsers className="nav-icon" />Internship</Link>
+        {/* <Link to="/internship" onClick={closeMenu}><FaUsers className="nav-icon" />Internship</Link> */}
         <Link to="/contactus" onClick={closeMenu}><FaEnvelope className="nav-icon" />Contact Us</Link>
       </div>
     </nav>
