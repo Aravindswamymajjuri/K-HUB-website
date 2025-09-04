@@ -26,4 +26,3 @@ The **Khub Website** is designed for **Khub at KIET Korangi** to provide an inte
 - **Backend**: Node.js
 - **Database**: MongoDB Atlas
 - **Version Control**: Git
-
