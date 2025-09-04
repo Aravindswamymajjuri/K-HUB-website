@@ -75,7 +75,20 @@
 .view-achievements-view-achievement .achievement-item-view-achievement p {
     margin: 10px;
 }
+.spinner {
+  border: 6px solid #f3f3f3;
+  border-top: 6px solid #2869d2;
+  border-radius: 50%;
+  width: 48px;
+  height: 48px;
+  animation: spin 1s linear infinite;
+  margin: auto;
+}
 
+@keyframes spin {
+  0% { transform: rotate(0deg);}
+  100% { transform: rotate(360deg);}
+}
 @media (min-width: 1024px) {
     .view-achievements-view-achievement .achievement-item-view-achievement {
         max-width: 30%; /* 3 cards per row for large screens */

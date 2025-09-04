@@ -28,7 +28,6 @@ const ViewHackathon = () => {
 
   return (
     <div className="viewhackathon-body">
-      <h3>.</h3>
       <h1 className="heading">Hackathons</h1>
       <div className="hackathon-list">
         {selectedHackathon ? (

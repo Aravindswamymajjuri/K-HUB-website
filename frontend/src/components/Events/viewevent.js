@@ -31,23 +31,16 @@ const ViewEvent = () => {
 
   return (
     <div className="view-event-container">
-      <h5>.</h5>
       <h1 className="heading">Events</h1>
       <div className="event-grid">
         {events.map((event) => (
           <Link to={`/fullevents/${event._id}`} key={event._id} className="event-card">
-            <div className="event-card-inner">
-              <div className="event-card-front">
-                <img
-                  src={`data:image/jpeg;base64,${arrayBufferToBase64(event.mainPic.data)}`}
-                  alt="Main Event"
-                />
-              </div>
-              <div className="event-card-back">
-                <h2>{event.name}</h2>
-                <p>Click to know more</p>
-              </div>
-            </div>
+            <img
+              src={`data:image/jpeg;base64,${arrayBufferToBase64(event.mainPic.data)}`}
+              alt="Main Event"
+              className="event-image"
+            />
+            <h3 className="event-title">{event.name}</h3>
           </Link>
         ))}
       </div>

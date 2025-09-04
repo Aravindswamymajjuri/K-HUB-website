@@ -20,7 +20,12 @@ const BatchView = () => {
   };
 
   if (batches.length === 0) {
-    return <p>Loading batches...</p>;
+    return (
+      <div className="custom-batch-container" style={{ minHeight: '60vh', display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column' }}>
+        <div className="spinner"></div>
+        <p style={{ marginTop: '16px' }}>Loading batches...</p>
+      </div>
+    );
   }
 
   return (

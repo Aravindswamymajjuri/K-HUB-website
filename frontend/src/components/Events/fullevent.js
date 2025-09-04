@@ -54,55 +54,64 @@ const FullEvent = () => {
   };
 
   if (!event) {
-    return <div>Loading...</div>;
+    return <div className="loading-container">Loading...</div>;
   }
 
   return (
-    <div className="fullevnt-container">
+    <div className="full-event-page">
+      <header className="event-header">
+        <Link to="/events" className="back-button">
+          &larr; Back to Events
+        </Link>
+      </header>
       
-      <h4>.</h4>
-      <h1 className='head'>{event.name}</h1>
-      <button><Link to="/events">Back</Link></button>
-      <img
-        src={`data:image/jpeg;base64,${arrayBufferToBase64(event.mainPic.data)}`}
-        alt="Main Event"
-        className="cover-image"
-      />
-      <h2>Sub-events:</h2>
-      {event.subEvents.map((subEvent, index) => (
-        <div key={index} className="sub-event">
-          <h3>{subEvent.name}</h3>
-          <p className="sub-event-description">{subEvent.description}</p>
-          <div className="sub-event-images">
-            {subEvent.images.map((image, imgIndex) => (
-              <img
-                key={imgIndex}
-                src={`data:image/jpeg;base64,${arrayBufferToBase64(image.data)}`}
-                alt={`Sub-event ${index} Imagee ${imgIndex}`}
-                onClick={() => handleImageClick(subEvent.images, imgIndex)}
-              />
-            ))}
-          </div>
-        </div>
-      ))}
+      <h1 className="event-title">{event.name}</h1>
+
+      <div className="main-content">
+        <img
+          src={`data:image/jpeg;base64,${arrayBufferToBase64(event.mainPic.data)}`}
+          alt="Main Event"
+          className="cover-image"
+        />
+
+        <section className="sub-events-section">
+          <h2 className="section-title">Sub-events</h2>
+          {event.subEvents.map((subEvent, index) => (
+            <div key={index} className="sub-event-card">
+              <h3 className="sub-event-title">{subEvent.name}</h3>
+              <p className="sub-event-description">{subEvent.description}</p>
+              <div className="sub-event-images-grid">
+                {subEvent.images.map((image, imgIndex) => (
+                  <img
+                    key={imgIndex}
+                    src={`data:image/jpeg;base64,${arrayBufferToBase64(image.data)}`}
+                    alt={`Sub-event ${index} Image ${imgIndex}`}
+                    onClick={() => handleImageClick(subEvent.images, imgIndex)}
+                    className="sub-event-image"
+                  />
+                ))}
+              </div>
+            </div>
+          ))}
+        </section>
+      </div>
+
       {previewImage && (
-        <div>
-          <h1>Image-Prev</h1>
-        <div className="image-preview">
+        <div className="image-preview-modal">
           <button className="close-preview" onClick={handleClosePreview}>
             &times;
           </button>
-          <button className="prev-image" onClick={handlePrevImage}>
+          <button className="nav-button prev" onClick={handlePrevImage}>
             &lt;
           </button>
           <img
             src={`data:image/jpeg;base64,${arrayBufferToBase64(previewImage[currentImageIndex].data)}`}
             alt="Preview"
+            className="preview-image-display"
           />
-          <button className="next-image" onClick={handleNextImage}>
+          <button className="nav-button next" onClick={handleNextImage}>
             &gt;
           </button>
-        </div>
         </div>
       )}
     </div>

@@ -7,6 +7,7 @@ const ViewNews = () => {
   const [allNews, setAllNews] = useState([]);
   const [selectedDate, setSelectedDate] = useState('');
   const [availableDates, setAvailableDates] = useState([]);
+  const [loading, setLoading] = useState(true); // Add loading state
 
   useEffect(() => {
     fetchNews();
@@ -20,6 +21,8 @@ const ViewNews = () => {
       setAvailableDates(dates);
     } catch (error) {
       console.error('Error fetching news:', error);
+    } finally {
+      setLoading(false); // Set loading to false after fetch
     }
   };
 
@@ -45,6 +48,15 @@ const ViewNews = () => {
       </div>
     );
   };
+
+  if (loading) {
+    return (
+      <div className="news-container" style={{ minHeight: '60vh', display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column' }}>
+        <div className="spinner"></div>
+        <p style={{ marginTop: '16px' }}>Loading...</p>
+      </div>
+    );
+  }
 
   return (
     <div className="news-container">

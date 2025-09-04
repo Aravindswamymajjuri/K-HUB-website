@@ -35,13 +35,28 @@ const ViewAchievement = () => {
     setSelectedImage(null);
   };
 
+  // ...existing code...
+
+  // ...existing code...
   if (loading) {
-    return <p>Loading...</p>;
+    return (
+      <div className="view-achievements-view-achievement" style={{ minHeight: '60vh', display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column' }}>
+        <div className="spinner"></div>
+        <p style={{ marginTop: '16px' }}>Loading...</p>
+      </div>
+    );
   }
+// ...existing code...
 
   if (error) {
-    return <p>Error: {error}</p>;
+    return (
+      <div className="view-achievements-view-achievement" style={{ minHeight: '60vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        <p>Error: {error}</p>
+      </div>
+    );
   }
+
+// ...existing code...
 
   return (
     <div className="view-achievements-view-achievement">

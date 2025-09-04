@@ -95,6 +95,21 @@
   font-size: 1.2em;
 }
 
+.spinner {
+  border: 6px solid #f3f3f3;
+  border-top: 6px solid #2869d2;
+  border-radius: 50%;
+  width: 48px;
+  height: 48px;
+  animation: spin 1s linear infinite;
+  margin: auto;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg);}
+  100% { transform: rotate(360deg);}
+}
+
 @media (max-width: 1024px) {
   .project-card {
     width: calc(50% - 20px); /* 2 columns */

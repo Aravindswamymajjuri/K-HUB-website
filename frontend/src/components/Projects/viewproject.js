@@ -10,34 +10,34 @@ const ViewProjects = () => {
   const [selectedBatch, setSelectedBatch] = useState('');
   const [selectedTeam, setSelectedTeam] = useState('');
   const [projects, setProjects] = useState([]);
+  const [loading, setLoading] = useState(true); // Add loading state
 
   useEffect(() => {
-    axios.get('http://localhost:5000/api/projects/batch-numbers')
-      .then(response => {
-        setBatchNumbers(response.data);
+    Promise.all([
+      axios.get('http://localhost:5000/api/projects/batch-numbers'),
+      axios.get('http://localhost:5000/api/projects/team-numbers')
+    ])
+      .then(([batchRes, teamRes]) => {
+        setBatchNumbers(batchRes.data);
+        setTeamNumbers(teamRes.data);
       })
       .catch(error => {
-        console.error('Error fetching batch numbers:', error);
-      });
-
-    axios.get('http://localhost:5000/api/projects/team-numbers')
-      .then(response => {
-        setTeamNumbers(response.data);
+        console.error('Error fetching batch/team numbers:', error);
       })
-      .catch(error => {
-        console.error('Error fetching team numbers:', error);
-      });
+      .finally(() => setLoading(false));
   }, []);
 
   useEffect(() => {
     if (selectedBatch !== '' || selectedTeam !== '') {
+      setLoading(true);
       axios.get(`http://localhost:5000/api/projects?batchNumber=${selectedBatch}&teamNumber=${selectedTeam}`)
         .then(response => {
           setProjects(response.data);
         })
         .catch(error => {
           console.error('Error fetching projects:', error);
-        });
+        })
+        .finally(() => setLoading(false));
     }
   }, [selectedBatch, selectedTeam]);
 
@@ -50,8 +50,17 @@ const ViewProjects = () => {
     setSelectedTeam(e.target.value);
   };
 
+  if (loading) {
+    return (
+      <div className="view-projects-container" style={{ minHeight: '60vh', display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column' }}>
+        <div className="spinner"></div>
+        <p style={{ marginTop: '16px' }}>Loading...</p>
+      </div>
+    );
+  }
+
   return (
-    <div className="view-projects-container">
+    <div className="view-projects-container" style={{ minHeight: '60vh' }}>
       <h3>.</h3>
       <h2 className="heading">𝗣𝗥𝗢𝗝𝗘𝗖𝗧𝗦</h2>
       <p className="subheading">Explore into our projects which have been done by our Khub during their internships</p>

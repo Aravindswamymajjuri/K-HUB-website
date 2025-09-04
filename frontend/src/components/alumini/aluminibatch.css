@@ -21,6 +21,7 @@
   padding: 20px;
   max-width: 1200px;
   margin: 0 auto;
+  min-height: 60vh; /* Add this line */
 }
 
 /* Grid Styles */
@@ -63,4 +64,20 @@
 .custom-batch-link {
   text-decoration: none;
   color: inherit;
+}
+
+/* Spinner Styles */
+.spinner {
+  border: 6px solid #f3f3f3;
+  border-top: 6px solid #3b82f6;
+  border-radius: 50%;
+  width: 48px;
+  height: 48px;
+  animation: spin 1s linear infinite;
+  margin: auto;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg);}
+  100% { transform: rotate(360deg);}
 }
