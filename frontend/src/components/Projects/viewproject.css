@@ -140,3 +140,153 @@
     font-size: 1em;
   }
 }
+
+
+/* Add these styles to your existing viewproject.css file */
+
+/* Project Links Section */
+.project-links {
+  display: flex;
+  gap: 15px;
+  margin: 15px 0;
+  flex-wrap: wrap;
+}
+
+.github-link, .deployment-link {
+  flex: 1;
+  min-width: 120px;
+}
+
+.github-link a, .deployment-link a {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  background-color: #f8f9fa;
+  color: #333;
+  text-decoration: none;
+  border-radius: 6px;
+  border: 1px solid #dee2e6;
+  transition: all 0.3s ease;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.github-link a:hover {
+  background-color: #333;
+  color: white;
+  border-color: #333;
+}
+
+.deployment-link a:hover {
+  background-color: #007bff;
+  color: white;
+  border-color: #007bff;
+}
+
+/* Document and Video Sections */
+.project-document, .project-video {
+  margin: 20px 0;
+  padding: 15px;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  border-left: 4px solid #007bff;
+}
+
+.project-document h4, .project-video h4 {
+  margin: 0 0 10px 0;
+  color: #495057;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.document-info, .video-info {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.filename {
+  flex: 1;
+  font-size: 14px;
+  color: #6c757d;
+  word-break: break-all;
+  min-width: 150px;
+}
+
+.download-btn {
+  background-color: #28a745;
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 500;
+  transition: background-color 0.3s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  white-space: nowrap;
+}
+
+.download-btn:hover {
+  background-color: #218838;
+}
+
+.download-btn:active {
+  transform: translateY(1px);
+}
+
+/* Video Preview */
+.video-preview {
+  margin-top: 15px;
+}
+
+.video-preview video {
+  max-width: 100%;
+  background-color: #000;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .project-links {
+    flex-direction: column;
+  }
+  
+  .github-link, .deployment-link {
+    flex: none;
+  }
+  
+  .document-info, .video-info {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .filename {
+    min-width: auto;
+    margin-bottom: 8px;
+  }
+  
+  .download-btn {
+    align-self: flex-start;
+  }
+}
+
+/* Enhanced Project Card */
+.project-card {
+  position: relative;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.project-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+}
+
+.media-section {
+  display: flex;
+  justify-content: space-evenly;
+}
