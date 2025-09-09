@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 import './batchview.css';
+import LogoLoader from '../achivements/LogoLoader'; // Add this import
 
 const BatchView = () => {
   const [latestBatch, setLatestBatch] = useState(null);
@@ -23,7 +24,26 @@ const BatchView = () => {
   };
 
   if (!latestBatch) {
-    return <p>Loading latest batch...</p>;
+    return (
+      <div style={{
+        minHeight: '100vh',
+        display: 'flex',
+        flexDirection: 'column'
+      }}>
+        <div style={{
+          flex: 1,
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'center'
+        }}>
+          <LogoLoader /> {/* Show logo loader while loading */}
+        </div>
+        <footer className="footer" style={{ marginTop: 'auto' }}>
+          <p>© 2025 Your Website</p>
+        </footer>
+      </div>
+    );
   }
 
   return (

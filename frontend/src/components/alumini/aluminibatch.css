@@ -18,6 +18,13 @@
     border-radius: 4px;
 }
 
+.batch-wrapper {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+}
+
 .custom-batch-container {
     padding: 20px;
     max-width: 1200px;
@@ -25,6 +32,7 @@
     min-height: 60vh;
     /* Add this line */
     padding-top: 70px;
+    flex: 1;
 }
 
 .custom-batch-container.loading-state {
@@ -110,4 +118,14 @@
     100% {
         transform: rotate(360deg);
     }
+}
+
+.app-main-layout {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.app-content {
+    flex: 1;
 }
