@@ -120,7 +120,7 @@ const toggleAchievementsDropdown = () => setAchievementsDropdownOpen(!achievemen
             {/* <Link to="/teams/previous" onClick={closeMenu}>Previous Batch</Link> */}
           </div>
         </div>
-        <Link to="/projectlink" onClick={closeMenu}><FaUsers className="nav-icon" />Depolyed projects</Link>
+        {/* <Link to="/projectlink" onClick={closeMenu}><FaUsers className="nav-icon" />Depolyed projects</Link> */}
         {/* <Link to="/internship" onClick={closeMenu}><FaUsers className="nav-icon" />Internship</Link> */}
         <Link to="/contactus" onClick={closeMenu}><FaEnvelope className="nav-icon" />Contact Us</Link>
       </div>
